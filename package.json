@@ -1,0 +1,64 @@
+{
+  "name": "react-js-library",
+  "version": "2.0.0",
+  "description": "",
+  "main": "vite.config.js",
+  "files": [
+    "dist",
+    "types",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./dist/react-js-library.css": "./dist/react-js-library.css",
+    "./components": "./dist/components/index.js",
+    "./components/ui": "./dist/components/ui/index.js",
+    "./hooks": "./dist/hooks/index.js",
+    "./hooks/browser": "./dist/hooks/browser.js",
+    "./hooks/react": "./dist/hooks/react.js",
+    "./hooks/timers": "./dist/hooks/timers.js",
+    "./hooks/utils": "./dist/hooks/utils.js",
+    "./tools": "./dist/tools/index.js",
+    "./tools/browser": "./dist/tools/browser.js",
+    "./tools/classes": "./dist/tools/classes.js",
+    "./tools/is": "./dist/tools/is.js",
+    "./tools/misc": "./dist/tools/misc.js"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "push": "rimraf dist && tsc && vite build && npm link",
+    "preview": "vite preview",
+    "build:types": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "peerDependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "@capacitor-community/keep-awake": "^7.1.0",
+    "@capacitor/app": "^7.0.1",
+    "@capacitor/cli": "^7.4.2",
+    "@capacitor/core": "^7.4.2",
+    "@capacitor/filesystem": "^7.1.3",
+    "@capacitor/geolocation": "^7.1.4",
+    "@capacitor/preferences": "^7.0.1",
+    "lodash.isequal": "^4.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "eslint": "^9.32.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.6",
+    "vite-plugin-static-copy": "^3.1.1"
+  }
+}

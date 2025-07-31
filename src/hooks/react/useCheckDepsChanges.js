@@ -1,0 +1,33 @@
+import { useRef } from "react";
+
+
+/**
+ * Hook that provides a way to check if dependencies have changed, useful for development time
+ *
+ * @param {...any} deps - Dependencies to check for changes
+ * @returns {[boolean : changed, [{index: number, previous: any, current: any}]]}
+ * - Returns an array where the first element is a boolean indicating if any dependencies changed,
+ *   and the second element is an array of objects describing the changes.
+ *
+ * @example
+ * // Basic usage
+ * useEffect(() => {}, [val1, val2]);
+ * const [changed, changes] = useCheckDepsChanges(val1, val2);
+ */
+const useCheckDepsChanges = (...deps) => {
+  const previousDepsRef = useRef(Array.from(deps));
+  console.assert(deps.length === previousDepsRef.current.length, 'Dependencies length mismatch');
+
+  const changes = [];
+  deps.forEach((dep, index) => {
+    if (dep !== previousDepsRef.current[index])
+      changes.push({ index, previous: previousDepsRef.current[index], current: dep });
+  });
+
+  if (changes.length > 0)
+    previousDepsRef.current = Array.from(deps);
+
+  return [changes.length > 0, changes];
+};
+
+export default useCheckDepsChanges;
