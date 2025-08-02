@@ -9,7 +9,7 @@ import { isFunction } from '../../tools/is';
  *
  * @param {Function} fn - The function to be called on component unmount.
  */
-const useOndismount = fn => {
+const useOnDismount = fn => {
   const fnRef = useLast(fn);  // Stable ref that always points to latest fn
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const useOndismount = fn => {
   }, [fnRef]);                // Effect runs once, fnRef is stable and does not change
 };
 
-export default useOndismount;
+export default useOnDismount;

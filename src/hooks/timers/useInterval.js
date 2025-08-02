@@ -13,7 +13,7 @@ import { useLast, useOnDismount, useOnMount } from '../react';
 const useInterval = (callback, interval = 1000, immediately = true) => {
   const timer = useRef();                                           // Interval timer
   const fn = useLast(callback);                                     // Last callback function
-  const [working, { setFalse, setTrue }] = useBoolean(immediately);
+  const [working, { setFalse, setTrue }] = useBoolean();
 
   const handleStop = useCallback(() => {
     if (timer.current) {
@@ -35,7 +35,10 @@ const useInterval = (callback, interval = 1000, immediately = true) => {
   , [working, handleStart, handleStop]);
 
   useOnMount(() => immediately && handleStart());
-  useOnDismount(() => clearInterval(timer.current));                // No state change on dismounting
+  useOnDismount(() => {
+    clearInterval(timer.current);
+    timer.current = undefined; // In strict mode, this is necessary to avoid remount issues
+  });
 
   return({
     working,

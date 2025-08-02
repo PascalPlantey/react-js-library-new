@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 
-import { isFunction } from '../../tools/is';
+import { isFunction } from '../../../tools/is';
 
 import "./Navbar.css";
 
