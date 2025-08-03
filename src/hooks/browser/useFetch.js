@@ -31,7 +31,7 @@ const initialObj = {
 const useFetch = (api, url, options, debounce = 0) => {
   const refController = useRef(undefined);
   const optionsRef = useLast(options);
-  const [value, { toggle }] = useBoolean();
+  const { value, toggle } = useBoolean();
   const { object, set } = useObject(initialObj);
 
   const abort = useCallback(() => {

@@ -117,7 +117,7 @@ const decryptData = async (encryptedData, password) => {
  */
 const useSharedStorage = (fileName, defaultValue, encryptionKey) => {
   const [value, setValue] = useState(defaultValue);
-  const [loading, { setValue: setLoading }] = useBoolean(true);
+  const { value : loading, setValue: setLoading } = useBoolean(true);
 
   // Helper function to write file
   const writeFile = useCallback(async (data) => {

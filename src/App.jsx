@@ -8,7 +8,7 @@ import { useSpeedometer } from './hooks/utils';
 import { GeoCoordinates } from './tools';
 
 function App() {
-  const [isVisible, { setTrue, setFalse, toggle }] = useBoolean(false);
+  const { value: isVisible, setTrue, setFalse, toggle } = useBoolean(false);
   const {coordinates} = useGpsCoordinates();
   const speed = useSpeedometer(coordinates, 30, true);
 

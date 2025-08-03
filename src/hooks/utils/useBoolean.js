@@ -23,15 +23,13 @@ const useBoolean = (initial = false) => {
   const setFalse = useCallback(() => setValue(false), []);
   const toggle = useCallback(() => setValue(prev => !prev), []);
 
-  return [
+  return ({
     value,
-    {
-      setValue,
-      setTrue,
-      setFalse,
-      toggle
-    }
-  ];
+    setValue,
+    setTrue,
+    setFalse,
+    toggle
+  });
 };
 
 export default useBoolean;

@@ -21,7 +21,7 @@ import useEventListener from './useEventListener';
  * }
  */
 const useVisibility = () => {
-  const [visible, { setValue }] = useBoolean(document.visibilityState === 'visible');
+  const { value : visible, setValue } = useBoolean(document.visibilityState === 'visible');
   useEventListener('visibilitychange', () => setValue(document.visibilityState === 'visible'), document);
 
   return visible;

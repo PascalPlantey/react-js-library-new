@@ -13,7 +13,7 @@ import { useLast, useOnDismount, useOnMount } from '../react';
 const useInterval = (callback, interval = 1000, immediately = true) => {
   const timer = useRef();                                           // Interval timer
   const fn = useLast(callback);                                     // Last callback function
-  const [working, { setFalse, setTrue }] = useBoolean();
+  const { value : working, setFalse, setTrue } = useBoolean();
 
   const handleStop = useCallback(() => {
     if (timer.current) {

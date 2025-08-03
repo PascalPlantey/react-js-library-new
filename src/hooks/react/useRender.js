@@ -16,7 +16,7 @@ import { useBoolean } from "../utils";
  * @returns {Function} A function that, when called, forces the component to re-render.
  */
 const useRender = () => {
-  const [, { toggle : render }] = useBoolean();
+  const { toggle : render } = useBoolean();
 
   return render;
 };
