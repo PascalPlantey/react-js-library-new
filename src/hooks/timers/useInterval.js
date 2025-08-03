@@ -1,6 +1,5 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useState } from 'react';
 
-import { useBoolean } from '../utils';
 import { useLast, useOnDismount, useOnMount } from '../react';
 
 /**
@@ -11,37 +10,33 @@ import { useLast, useOnDismount, useOnMount } from '../react';
  * @returns {object} { working, toggle: () => void, stop: () => void, start: () => void }
  */
 const useInterval = (callback, interval = 1000, immediately = true) => {
-  const timer = useRef();                                           // Interval timer
-  const fn = useLast(callback);                                     // Last callback function
-  const { value : working, setFalse, setTrue } = useBoolean();
+  const [timer, setTimer] = useState();
+  const fn = useLast(callback);                     // Last version of the callback function
 
   const handleStop = useCallback(() => {
-    if (timer.current) {
-      clearInterval(timer.current);
-      timer.current = undefined;
-      setFalse(); // Set working to false
+    if (timer) {
+      clearInterval(timer);
+      setTimer(undefined);
     }
-  }, [setFalse]);
+  }, [setTimer]);
 
   const handleStart = useCallback(() => {
-    if (!timer.current) {
-      timer.current = setInterval(fn.current, interval);
-      setTrue(); // Set working to true
-    }
-  }, [fn, interval, setTrue]);
+    if (!timer)
+      setTimer(setInterval(fn.current, interval));
+  }, [fn, interval, setTimer]);
 
   const handleToggle = useCallback(
-    () => working ? handleStop() : handleStart()
-  , [working, handleStart, handleStop]);
+    () => timer ? handleStop() : handleStart()
+  , [timer, handleStart, handleStop]);
 
   useOnMount(() => immediately && handleStart());
   useOnDismount(() => {
-    clearInterval(timer.current);
-    timer.current = undefined; // In strict mode, this is necessary to avoid remount issues
+    timer && clearInterval(timer);
+    setTimer(undefined);                            // In strict mode, this is necessary to avoid remount issues
   });
 
   return({
-    working,
+    working: timer !== undefined,
     toggle: handleToggle,
     stop: handleStop,
     start: handleStart
