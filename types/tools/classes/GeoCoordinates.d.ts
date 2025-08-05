@@ -25,6 +25,14 @@ declare class GeoCoordinates {
         value: [number, number];
     }): number;
     /**
+     * Calculates the bearing (angle) from this GeoCoordinates to another GeoCoordinates instance.
+     * The bearing is the angle of the direction between the two points,
+     * measured in degrees from the North (0°).
+     * @param {GeoCoordinates} other - The target coordinates.
+     * @returns {number} The bearing in degrees, normalized to the range [0, 360]
+     */
+    getBearingTo(other: GeoCoordinates): number;
+    /**
      * Returns the cardinal direction (N, NE, E, SE, S, SW, W, NW) from this point to another
      * @param {GeoCoordinates} other
      * @returns {string} Direction

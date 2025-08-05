@@ -106,28 +106,37 @@ class GeoCoordinates {
   }
 
   /**
+   * Calculates the bearing (angle) from this GeoCoordinates to another GeoCoordinates instance.
+   * The bearing is the angle of the direction between the two points,
+   * measured in degrees from the North (0°).
+   * @param {GeoCoordinates} other - The target coordinates.
+   * @returns {number} The bearing in degrees, normalized to the range [0, 360]
+   */
+  getBearingTo(other) {
+    const to = new GeoCoordinates(other);
+
+    const toRadians = deg => (deg * Math.PI) / 180;
+    const toDegrees = rad => (rad * 180) / Math.PI;
+
+    const φ1 = toRadians(this.latitude);
+    const φ2 = toRadians(to.latitude);
+    const Δλ = toRadians(to.longitude - this.longitude);
+
+    const y = Math.sin(Δλ) * Math.cos(φ2);
+    const x = Math.cos(φ1) * Math.sin(φ2) -
+              Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+
+    const θ = Math.atan2(y, x);
+    return (toDegrees(θ) + 360) % 360; // Convertir en degrés et normaliser entre 0 et 360
+  }
+
+  /**
    * Returns the cardinal direction (N, NE, E, SE, S, SW, W, NW) from this point to another
    * @param {GeoCoordinates} other
    * @returns {string} Direction
    */
   getDirectionTo(other) {
-    const to = new GeoCoordinates(other);
-
-    const toRad = deg => (deg * Math.PI) / 180;
-    const toDeg = rad => (rad * 180) / Math.PI;
-
-    const lat1 = toRad(this.latitude);
-    const lat2 = toRad(to.latitude);
-    const dLon = toRad(to.longitude - this.longitude);
-
-    const y = Math.sin(dLon) * Math.cos(lat2);
-    const x =
-      Math.cos(lat1) * Math.sin(lat2) -
-      Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-
-    let brng = Math.atan2(y, x);
-    brng = toDeg(brng);
-    brng = (brng + 360) % 360;
+    const brng = this.getBearingTo(other);
 
     const directions = [
       "N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"

@@ -13,17 +13,25 @@ const useInterval = (callback, interval = 1000, immediately = true) => {
   const [timer, setTimer] = useState();
   const fn = useLast(callback);                     // Last version of the callback function
 
-  const handleStop = useCallback(() => {
-    if (timer) {
-      clearInterval(timer);
-      setTimer(undefined);
-    }
-  }, [setTimer]);
+  const handleStop = useCallback(() =>
+    setTimer(prev => {
+      if (prev) {
+        clearInterval(prev);
+        return undefined;
+      }
+      else
+        return prev;
+    })
+  , []);
 
-  const handleStart = useCallback(() => {
-    if (!timer)
-      setTimer(setInterval(fn.current, interval));
-  }, [fn, interval, setTimer]);
+  const handleStart = useCallback(() => 
+    setTimer(prev => {
+      if (prev)
+        return prev;                              // Already running, do nothing
+      else
+        return setInterval(fn.current, interval); // Start new timer
+    })
+  , [fn, interval, setTimer]);
 
   const handleToggle = useCallback(
     () => timer ? handleStop() : handleStart()
