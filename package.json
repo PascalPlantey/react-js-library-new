@@ -27,7 +27,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm link",
     "tgz": "npm run build && npm pack",
     "push": "rimraf dist && tsc && vite build && npm link",
     "preview": "vite preview",
