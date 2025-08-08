@@ -1,42 +1,66 @@
 import { useState, useEffect, useRef } from "react";
 
-import { DeviceOrientation } from "@ionic-native/device-orientation";
+import useVisibility from "./useVisibility";
 
 /**
  * Custom React hook to get the device's orientation (alpha value)
  * 
- * Uses Capacitor's Motion plugin if available, otherwise falls back to the browser's
+ * Uses native Cordova compass API if available, otherwise falls back to the browser's
  * `deviceorientation` event. The hook listens for orientation changes when `active` is true
+ * and the app is visible. 
+ * 
+ * Automatically handles app visibility transitions; the mobile might stop the sensor updates causing the watchHeading
+ * to stop (and not recover) receiving updates when the app goes to background or sleep
+ * - Stops listening when app goes to background/sleep
+ * - Restarts listening when app becomes visible again
+ * 
+ * This ensures reliable compass behavior across device sleep/wake cycles without
+ * requiring external visibility management.
  *
  * @param {boolean} [active=true] - Whether to actively listen for orientation changes
  * @param {number} [throttleMs=100] - Minimum time (in ms) between updates
- * @returns {number|undefined} The current device orientation (angle value), or `undefined` if not available
+ * @returns {number|undefined} The current device orientation (angle value), or `undefined` if not available (hardware problem
+ * or hook is inactive/starting)
  */
 const useDeviceCompass = (active = true, throttleMs = 100) => {
   const [orientation, setOrientation] = useState();
-  const lastUpdateRef = useRef(0); // To track the last update time
+  const lastUpdateRef = useRef(0);                      // To track the last update time (throttle)
+
+  const appVisible = useVisibility();                   // Track app visibility for reset on sleep/wake
+  const wasAppVisibleRef = useRef(appVisible);          // Track previous app visibility state changes
+  
+  // Combine user active state with app visibility for true compass activity
+  const reallyActive = active && appVisible;
 
   useEffect(() => {
-    let subscription;
-
-    const throttledSetOrientation = newOrientation => {
-      const now = Date.now();
-      if (now - lastUpdateRef.current >= throttleMs) {
-        lastUpdateRef.current = now;
+    const throttledSetOrientation = (newOrientation, nativeTimestamp) => {
+      // Use Cordova sensor timestamp when available, fallback to system time when using browser
+      const timeToUse = nativeTimestamp || Date.now();
+      if (timeToUse - lastUpdateRef.current >= throttleMs) {
+        lastUpdateRef.current = timeToUse;
         setOrientation(newOrientation);
       }
     };
 
-    if (active && DeviceOrientation.watchHeading) {
-      // Use DeviceOrientation plugin if available
-      subscription = DeviceOrientation.watchHeading().subscribe(
-        data => throttledSetOrientation(data.magneticHeading),
-        error => { throw new Error("Error watching device orientation:", error) }
+    wasAppVisibleRef.current = appVisible;              // Update app visibility tracking
+
+    if (!reallyActive) {
+      // Reset orientation to undefined when inactive to force fresh detection on reactivation
+      setOrientation(undefined);
+      lastUpdateRef.current = 0;
+      return;
+    }
+
+    if (reallyActive && window.cordova && navigator?.compass?.watchHeading) {
+      // Use native Cordova compass API directly (more reliable than Ionic wrapper)
+      const watchID = navigator.compass.watchHeading(
+        (heading) => throttledSetOrientation(heading.magneticHeading, heading.timestamp), 
+        (error) => console.error("Native compass error:", error), 
+        { frequency: throttleMs }
       );
 
-      return () => subscription?.unsubscribe();
-
-    } else if (active) {
+      return () => navigator.compass.clearWatch(watchID);
+    } else if (reallyActive) {
       // Fallback to browser's deviceorientationabsolute event
       const handleOrientation = event => {
         const alpha = event.alpha;
@@ -45,12 +69,13 @@ const useDeviceCompass = (active = true, throttleMs = 100) => {
         }
       };
 
+      // Trying to get 'ondeviceorientationabsolute' as the other event is not a magnetic absolute orientation
       const eventName = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
       window.addEventListener(eventName, handleOrientation);
 
       return () => window.removeEventListener(eventName, handleOrientation);
     }
-  }, [active, throttleMs]);
+  }, [active, appVisible, throttleMs, reallyActive]);
 
   return orientation;
 };
