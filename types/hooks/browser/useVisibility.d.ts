@@ -1,19 +1,4 @@
 export default useVisibility;
-export type UseVisibilityReturn = {
-    /**
-     * - Whether page is currently visible
-     */
-    isVisible: boolean;
-    /**
-     * - Current visibility state
-     */
-    visibilityState: DocumentVisibilityState;
-};
-/**
- * @typedef {Object} UseVisibilityReturn
- * @property {boolean} isVisible - Whether page is currently visible
- * @property {DocumentVisibilityState} visibilityState - Current visibility state
- */
 /**
  * Custom React hook that tracks the visibility state of the document.
  *

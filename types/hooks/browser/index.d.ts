@@ -1,6 +1,8 @@
 export { default as useCapacitorStorage } from "./useCapacitorStorage.js";
+export { default as useCordovaCompass } from "./useCordovaCompass.js";
 export { default as useCurrentPosition } from "./useCurrentPosition.js";
-export { default as useDeviceOrientation } from "./useDeviceOrientation.js";
+export { default as useDeviceCompass } from "./useDeviceCompass.js";
+export { default as useDragSession } from "./useDragSession.js";
 export { default as useEventListener } from "./useEventListener.js";
 export { default as useExitApp } from "./useExitApp.js";
 export { default as useFetch } from "./useFetch.js";

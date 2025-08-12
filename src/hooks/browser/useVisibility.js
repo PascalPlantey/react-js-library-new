@@ -1,11 +1,12 @@
+import { useEffect } from 'react';
+
+import { App } from '@capacitor/app';
+
 import { useBoolean } from "../utils";
 import useEventListener from './useEventListener';
 
-/**
- * @typedef {Object} UseVisibilityReturn
- * @property {boolean} isVisible - Whether page is currently visible
- * @property {DocumentVisibilityState} visibilityState - Current visibility state
- */
+import { isCapacitorAvailable } from '../../tools/browser';
+
 /**
  * Custom React hook that tracks the visibility state of the document.
  *
@@ -22,7 +23,19 @@ import useEventListener from './useEventListener';
  */
 const useVisibility = () => {
   const { value : visible, setValue } = useBoolean(document.visibilityState === 'visible');
+
   useEventListener('visibilitychange', () => setValue(document.visibilityState === 'visible'), document);
+
+  useEffect(() => {
+    let appListener;
+    if (isCapacitorAvailable())
+      appListener = App.addListener('appStateChange', ({ isActive }) => setValue(isActive));
+
+    return () => {
+      if (appListener && typeof appListener.remove === "function")
+        appListener.remove();
+    };
+  }, [setValue]);
 
   return visible;
 };

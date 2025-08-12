@@ -1,4 +1,8 @@
 export { default as debouncedFetch } from "./debouncedFetch.js";
+export { default as detectCordovaCompassCapability } from "./detectCordovaCompassCapability.js";
+export { default as getEventClientX } from "./getEventClientX.js";
+export { default as getEventClientXY } from "./getEventClientXY.js";
+export { default as getEventClientY } from "./getEventClientY.js";
 export { default as getEventTarget } from "./getEventTarget.js";
 export { default as getHTMLElement } from "./getHTMLElement.js";
 export { default as isCapacitorAvailable } from "./isCapacitorAvailable.js";
