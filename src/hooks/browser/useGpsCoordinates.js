@@ -39,20 +39,11 @@ const useGpsCoordinates = (
     } else {
       const handlePositionChange = ({ coords: { latitude, longitude } }) => {
         const newPos = new GeoCoordinates([latitude, longitude]);
-        if (!coordinates || !coordinates.isSameAs(newPos, precision))
-          setCoordinates(newPos);
-        setError(null);
+        setCoordinates(prev =>
+          !prev || !prev.isSameAs(newPos, precision) ? newPos : prev
+        );
+        if (error) setError(null);
       };
-
-      navigator.geolocation.getCurrentPosition(                 // Hope to get a quick position
-        handlePositionChange,
-        handleError,
-        {
-          enableHighAccuracy: false,
-          timeout: 10000,
-          maximumAge: 1000 * 60 * 15
-        }
-      );
 
       watchIdRef.current = navigator.geolocation.watchPosition( // Watch for position changes
         handlePositionChange,
@@ -62,7 +53,7 @@ const useGpsCoordinates = (
 
       return () => navigator.geolocation.clearWatch(watchIdRef.current);
     }
-  }, [active, precision, coordinates]);
+  }, [active, error, precision]);
 
   return { coordinates, error };
 };
