@@ -1,6 +1,6 @@
 export default useOnMount;
 /**
- * Hook that executes code when component mounts
+ * Hook that executes code once after the component has been mounted
  *
  * @param {() => void} fn - Callback function
  * @returns {void}

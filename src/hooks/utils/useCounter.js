@@ -1,17 +1,6 @@
 import { useState, useCallback } from "react";
 
-/**
- * @typedef {Object} UseCounterActions
- * @property {(value: number | ((prev: number) => number)) => void} setValue - Set counter value directly
- * @property {(step?: number) => void} increment - Increment counter by step (default 1)
- * @property {(step?: number) => void} decrement - Decrement counter by step (default 1)
- * @property {() => void} reset - Reset counter to initial value
- * @property {(value: number) => void} set - Alias for setValue
- */
 
-/**
- * @typedef {[number, UseCounterActions]} UseCounterReturn
- */
 /**
  * Hook for managing counter state with increment/decrement utilities
  * @param {number} [initial=0] Initial counter value

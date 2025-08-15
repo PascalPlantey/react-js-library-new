@@ -22,7 +22,7 @@ import { isString } from "../../tools/is";
 const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noop) => {
   const isDraggingRef = useRef(false);
   const refElt = useRef(getEventTarget(elt));
-  const excludeListRef = useLast(isString(exclude) ? [exclude] : exclude),
+  const excludeListRef = useLast(exclude ? isString(exclude) ? [exclude] : exclude : []),
         onStartRef = useLast(onStart),
         onMoveRef = useLast(onMove),
         onEndRef = useLast(onEnd);
@@ -30,7 +30,7 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
 
   const { toggle : togglePointerUp } = useEventListener("pointerup", handleDragEnd, refElt, false);
   const { toggle : togglePointerMove } = useEventListener("pointermove", handleDragMove, refElt, false);
-  const { toggle : togglePointerDown } = useEventListener("pointerdown", handleDragStart, refElt, refElt.current !== undefined);
+  const { toggle : togglePointerDown } = useEventListener("pointerdown", handleDragStart, refElt, false);
 
   useOnMount(() => {
     if (refElt.current === undefined) {

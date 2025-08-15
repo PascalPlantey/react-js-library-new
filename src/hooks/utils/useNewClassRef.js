@@ -13,8 +13,10 @@ import { useRef } from "react";
  */
 const useNewClassRef = func => {
   const ref = useRef();
+
   if (!ref.current)
     ref.current = func();
+
   return ref.current;
 };
 

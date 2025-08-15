@@ -1,4 +1,5 @@
 import { useRef, useCallback } from 'react';
+import { useLast } from '../react';
 
 /**
  * React hook that creates a debounced version of a function
@@ -24,12 +25,13 @@ import { useRef, useCallback } from 'react';
  * const debouncedValidate = useDebounce(validateForm, 500);
  */
 const useDebounce = (func, timeout = 500) => {
+  const fnRef = useLast(func);
   const timeoutRef = useRef();
   
   return useCallback((...args) => {
     clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => func(...args), timeout);
-  }, [func, timeout]);
+    timeoutRef.current = setTimeout(() => fnRef.current(...args), timeout);
+  }, [fnRef, timeout]);
 };
 
 export default useDebounce;

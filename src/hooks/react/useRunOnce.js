@@ -9,6 +9,9 @@ import { isFunction } from '../../tools/is';
  *
  * @param {Function} fn - The function to execute once on mount.
  * @returns {void}
+ *
+ * @remarks
+ * Should be changed or deleted as it is the same as useOnMount
  */
 const useRunOnce = (fn) => {
   const fnRef = useLast(fn);
