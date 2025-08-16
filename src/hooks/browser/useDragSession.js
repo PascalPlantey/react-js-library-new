@@ -4,25 +4,30 @@ import useEventListener from "./useEventListener";
 import { useLast, useOnMount } from "../react";
 
 import { getEventTarget, getEventClientXY } from "../../tools/browser";
-import { noop } from "../../tools/misc";
+import { noop, toIterable  } from "../../tools/misc";
 import { isString } from "../../tools/is";
 
+
 /**
- * Custom React hook to manage drag sessions on a given element.
- * Attaches pointer and drag event listeners to the target element and
- * invokes provided callbacks for drag start, move, and end events.
+ * Custom React hook to manage a drag session on a DOM element.
+ * Handles pointer events to track drag start, move, and end, with optional exclusion selectors.
  *
- * @param {HTMLElement|React.RefObject|function} elt - The target element, ref, or function returning the element to attach drag listeners to.
- * @param {function} [onStart=noop] - Callback invoked when drag starts. Receives an object: { from : { x, y }, elt }.
- * @param {function} [onMove=noop] - Callback invoked when drag moves. Receives an object: { from : { x, y }, to : { x, y }, elt }.
- * @param {function} [onEnd=noop] - Callback invoked when drag ends. Receives an object: { from : { x, y }, to : { x, y }, elt }.
+ * @param {HTMLElement|string|React.RefObject} elt - The target element, selector, or ref to attach drag listeners to.
+ * @param {string|string[]} [exclude] - Selector(s) to exclude from drag initiation (e.g., ".no-drag").
+ * @param {function} [onStart=noop] - Callback invoked when drag starts. Receives an object: { event, from, to, delta, elt }.
+ * @param {function} [onMove=noop] - Callback invoked when drag moves. Receives an object: { event, from, to, delta, elt }.
+ * @param {function} [onEnd=noop] - Callback invoked when drag ends. Receives an object: { event, from, to, delta, elt }.
  *
  * @returns {void}
  */
 const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noop) => {
   const isDraggingRef = useRef(false);
   const refElt = useRef(getEventTarget(elt));
-  const excludeListRef = useLast(exclude ? isString(exclude) ? [exclude] : exclude : []),
+  const excludeListRef = useLast(exclude
+                                  ? isString(exclude) 
+                                    ? [exclude]
+                                    : toIterable(exclude)
+                                  : []),
         onStartRef = useLast(onStart),
         onMoveRef = useLast(onMove),
         onEndRef = useLast(onEnd);
