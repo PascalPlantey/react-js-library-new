@@ -28,14 +28,14 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
                                     ? [exclude]
                                     : toIterable(exclude)
                                   : []),
-        onStartRef = useLast(onStart),
-        onMoveRef = useLast(onMove),
-        onEndRef = useLast(onEnd);
-  const startFromRef = useRef({});
+        onStartFnRef = useLast(onStart),
+        onMoveFnRef = useLast(onMove),
+        onEndFnRef = useLast(onEnd);
+  const startFromRef = useRef({});                          // During a drag session holds the initial position
 
-  const { toggle : togglePointerUp } = useEventListener("pointerup", handleDragEnd, refElt, false);
-  const { toggle : togglePointerMove } = useEventListener("pointermove", handleDragMove, refElt, false);
-  const { toggle : togglePointerDown } = useEventListener("pointerdown", handleDragStart, refElt, false);
+  const { toggle : togglePointerUp }    = useEventListener("pointerup", handleDragEnd, refElt, false);
+  const { toggle : togglePointerMove }  = useEventListener("pointermove", handleDragMove, refElt, false);
+  const { toggle : togglePointerDown }  = useEventListener("pointerdown", handleDragStart, refElt, false);
 
   useOnMount(() => {
     if (refElt.current === undefined) {
@@ -43,15 +43,17 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
 
       if (refElt.current !== undefined)                     // We can start listening to drag start events
         togglePointerDown();
+      else
+        console.warn("useDragSession: the target element is not defined or not found :", elt);
     }
   });
 
-  const toggleAllListeners = () => {
+  const toggleListeners = () => {
     togglePointerMove();
     togglePointerUp();
   }
 
-  const returnValue = event => {
+  const paramValue = event => {
     let delta;
     const to = getEventClientXY(event);
     if (to)
@@ -71,15 +73,15 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
 
     isDraggingRef.current = true;
     startFromRef.current = getEventClientXY(event);
-    toggleAllListeners();
-    onStartRef.current(returnValue(event));
+    toggleListeners();                                      // Start listening to drag events move & up
+    onStartFnRef.current(paramValue(event));
   }
 
   function handleDragMove(event) {
     if (!isDraggingRef.current) return;
     event.stopPropagation();
 
-    onMoveRef.current(returnValue(event));
+    onMoveFnRef.current(paramValue(event));
   }
 
   function handleDragEnd(event) {
@@ -87,8 +89,8 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
     event.stopPropagation();
 
     isDraggingRef.current = false;
-    toggleAllListeners();
-    onEndRef.current(returnValue(event));
+    toggleListeners();
+    onEndFnRef.current(paramValue(event));
   }
 };
 

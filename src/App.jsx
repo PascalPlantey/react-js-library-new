@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import './App.css';
 
 import { useBoolean } from './hooks';
-import { useGpsCoordinates } from './hooks/browser';
-import { useSpeedometer } from './hooks/utils';
 import { GeoCoordinates } from './tools';
+import CurrentPosition from './tools/classes/CurrentGpsPosition';
 
 function App() {
   const { value: isVisible, setTrue, setFalse, toggle } = useBoolean(false);
-  const {coordinates} = useGpsCoordinates();
-  const speed = useSpeedometer(coordinates, 30, true);
+  const coordinates = useRef();
 
+  useEffect(() => {
+    if (!coordinates.current) {
+      coordinates.current = new CurrentPosition(false)
+        .startWatching()
+        .on('positionchange', 'App', args => {
+          console.log('Position changed:', args);
+          isVisible ? setFalse() : setTrue();
+      });
+      return () => coordinates.current?.destroy?.();
+    }
+  }, [isVisible, setFalse, setTrue]);
+
+  console.log('Current Position:', coordinates.current?.value, 'visible', isVisible);
   return (
     <div className="App">
       <header className="App-header">
@@ -21,11 +32,10 @@ function App() {
           <h2>useBoolean Hook Demo</h2>
 
           <div className="example">
-            {coordinates 
-              ? (<h3>Coordinates: {coordinates.latitude}, {coordinates.longitude}</h3>)
+            {coordinates.current
+              ? (<h3>Coordinates: {coordinates.current.latitude}, {coordinates.current.longitude}</h3>)
               : (<h3>Waiting for GPS coordinates...</h3>)
             }
-            <h3>Speed: {speed} km/h</h3>
           </div>
           <div className="example">
             <h3>Visibility Example</h3>

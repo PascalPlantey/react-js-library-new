@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
+import { Geolocation } from '@capacitor/geolocation';
+
 import { GeoCoordinates } from '../../tools/classes';
 
 /**
@@ -22,37 +24,52 @@ const useGpsCoordinates = (
   const optionsRef = useRef(options);
   const watchIdRef = useRef(null);
 
-  const handleError = ({ code, message }) => {
-    if (code !== 3)
-      console.warn(`Geolocation error ${code}: ${message}`);
-    setError(message);
-  };
-
   useEffect(() => {
-    if (!navigator.geolocation)
-      handleError({ code: 0, message: "La géolocalisation n'est pas supportée par cet appareil" });
-    else if (!active) {
+    const handlePositionChange = ({ coords: { latitude, longitude } }) => {
+      const newPos = new GeoCoordinates([latitude, longitude]);
+      setCoordinates(prev =>
+        !prev || !prev.isSameAs(newPos, precision) ? newPos : prev
+      );
+      if (error) setError(null);
+    };
+
+    const handleError = ({ code, message }) => {
+      if (code !== 3)
+        console.warn(`Geolocation error ${code}: ${message}`);
+      setError(message);
+    };
+
+    const clearWatch = () => {
       if (watchIdRef.current) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
+        Geolocation
+          ? Geolocation.clearWatch({ id: watchIdRef.current })
+          : navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = null;
       }
-    } else {
-      const handlePositionChange = ({ coords: { latitude, longitude } }) => {
-        const newPos = new GeoCoordinates([latitude, longitude]);
-        setCoordinates(prev =>
-          !prev || !prev.isSameAs(newPos, precision) ? newPos : prev
-        );
-        if (error) setError(null);
-      };
+    };
 
-      watchIdRef.current = navigator.geolocation.watchPosition( // Watch for position changes
+    if (!Geolocation && !navigator.geolocation)
+      return handleError({ code: 0, message: "La géolocalisation n'est pas supportée par cet appareil" });
+
+    else if (!active)                   // Stop watching requested
+      return clearWatch();
+
+    else if (Geolocation)               // Trying with Capacitor
+      Geolocation.watchPosition(
+        optionsRef.current,
+        (position, error) => error ? handleError(error) : handlePositionChange(position)
+      ).then(watchId => {
+        watchIdRef.current = watchId;
+      });
+
+    else                                // Fallback to browser's Geolocation API
+      watchIdRef.current = navigator.geolocation.watchPosition(
         handlePositionChange,
         handleError,
         optionsRef.current
       );
 
-      return () => navigator.geolocation.clearWatch(watchIdRef.current);
-    }
+    return clearWatch;
   }, [active, error, precision]);
 
   return { coordinates, error };

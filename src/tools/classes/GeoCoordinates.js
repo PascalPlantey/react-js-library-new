@@ -4,22 +4,37 @@ class GeoCoordinates {
   #latitude = 0;
   #longitude = 0;
 
-  constructor(input) {
-    this.from(input);
+  constructor(...args) {
+    this.from(...args);
   }
 
-  from(input) {
-    if (input instanceof GeoCoordinates) {
-      this.#latitude = input.latitude;
-      this.#longitude = input.longitude;
-    } else if (Array.isArray(input)) {
-      this.#latitude = Number(input[0]);
-      this.#longitude = Number(input[1]);
-    } else if (typeof input === 'object' && input !== null && 'latitude' in input && 'longitude' in input) {
-      this.#latitude = Number(input.latitude);
-      this.#longitude = Number(input.longitude);
-    } else {
-      throw new Error('Invalid input for GeoCoordinates');
+  from(...args) {
+    // from(lat, lon)
+    if (args.length === 2 && args.every(isNumber)) {
+      this.#latitude = Number(args[0]);
+      this.#longitude = Number(args[1]);
+
+    // from(any: <GeoCoordinates | [number, number] | { latitude, longitude }>)
+    } else if (args.length === 1) {
+      const input = args[0];
+
+      // Check if input is a GeoCoordinates instance
+      if (input instanceof GeoCoordinates) {
+        this.#latitude = input.latitude;
+        this.#longitude = input.longitude;
+
+      // Check if input is an array
+      } else if (Array.isArray(input)) {
+        this.#latitude = Number(input[0]);
+        this.#longitude = Number(input[1]);
+
+      // Check if input is an object with latitude and longitude
+      } else if (typeof input === 'object' && input !== null && 'latitude' in input && 'longitude' in input) {
+        this.#latitude = Number(input.latitude);
+        this.#longitude = Number(input.longitude);
+
+      } else
+        throw new Error('Invalid input for GeoCoordinates');
     }
   }
 

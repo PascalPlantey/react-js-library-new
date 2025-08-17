@@ -35,6 +35,7 @@
     "src/**/*.spec.*",
     "src/App.*",
     "src/main.*",
+    "src/tools/classes/EventEmitter.js",
     "scripts"
   ]
 }

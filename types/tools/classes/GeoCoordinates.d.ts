@@ -3,8 +3,8 @@ declare class GeoCoordinates {
     static fromObject(obj: any): GeoCoordinates;
     static fromString(str: any): GeoCoordinates;
     static isValid(obj: any): boolean;
-    constructor(input: any);
-    from(input: any): void;
+    constructor(...args: any[]);
+    from(...args: any[]): void;
     clone(): GeoCoordinates;
     set latitude(value: number);
     get latitude(): number;
