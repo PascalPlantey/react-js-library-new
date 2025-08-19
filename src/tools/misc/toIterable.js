@@ -1,4 +1,4 @@
-import { isIterable } from '../is';
+import isIterable from '../is/isIterable';
 
 /**
  * Makes sure an item is iterable

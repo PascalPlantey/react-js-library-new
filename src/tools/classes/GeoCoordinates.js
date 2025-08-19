@@ -1,11 +1,28 @@
-import { isNumber } from "../is";
+import isNumber from "../is/isNumber";
 
 class GeoCoordinates {
   #latitude = 0;
   #longitude = 0;
+  // Other data from GeolocationPosition
+  #accuracy = null;
+  #altitude = null;
+  #altitudeAccuracy = null;
+  #heading = null;
+  #speed = null;
+  #timestamp = null;
 
   constructor(...args) {
     this.from(...args);
+  }
+
+  // Clear extra properties (those coming from GeolocationPosition)
+  #clearExtra() {
+    this.#accuracy = null;
+    this.#altitude = null;
+    this.#altitudeAccuracy = null;
+    this.#heading = null;
+    this.#speed = null;
+    this.#timestamp = null;
   }
 
   from(...args) {
@@ -14,7 +31,7 @@ class GeoCoordinates {
       this.#latitude = Number(args[0]);
       this.#longitude = Number(args[1]);
 
-    // from(any: <GeoCoordinates | [number, number] | { latitude, longitude }>)
+    // from(any: <GeolocationPosition, GeoCoordinates | [number, number] | { latitude, longitude }>)
     } else if (args.length === 1) {
       const input = args[0];
 
@@ -22,16 +39,38 @@ class GeoCoordinates {
       if (input instanceof GeoCoordinates) {
         this.#latitude = input.latitude;
         this.#longitude = input.longitude;
+        this.#accuracy = input.accuracy;
+        this.#altitude = input.altitude;
+        this.#altitudeAccuracy = input.altitudeAccuracy;
+        this.#heading = input.heading;
+        this.#speed = input.speed;
+        this.#timestamp = input.timestamp;
+
+      } else if (
+        input instanceof GeolocationPosition ||
+        // Capacitor Geolocation doesn't give a GeolocationPosition instance
+        (input && typeof input.coords === 'object' && 'latitude' in input.coords && 'longitude' in input.coords)
+      ) {
+        this.#latitude = input.coords.latitude;
+        this.#longitude = input.coords.longitude;
+        this.#accuracy = input.coords.accuracy;
+        this.#altitude = input.coords.altitude;
+        this.#altitudeAccuracy = input.coords.altitudeAccuracy;
+        this.#heading = input.coords.heading;
+        this.#speed = input.coords.speed;
+        this.#timestamp = input.timestamp;
 
       // Check if input is an array
       } else if (Array.isArray(input)) {
         this.#latitude = Number(input[0]);
         this.#longitude = Number(input[1]);
+        this.#clearExtra();
 
       // Check if input is an object with latitude and longitude
       } else if (typeof input === 'object' && input !== null && 'latitude' in input && 'longitude' in input) {
         this.#latitude = Number(input.latitude);
         this.#longitude = Number(input.longitude);
+        this.#clearExtra();
 
       } else
         throw new Error('Invalid input for GeoCoordinates');
@@ -69,6 +108,7 @@ class GeoCoordinates {
       throw new TypeError('Latitude must be a number');
 
     this.#latitude = Number(value);
+    this.#clearExtra();
   }
 
   get longitude() {
@@ -79,8 +119,36 @@ class GeoCoordinates {
       throw new TypeError('Longitude must be a number');
 
     this.#longitude = Number(value);
+    this.#clearExtra();
   }
 
+  get accuracy() {
+    return this.#accuracy;
+  }
+
+  get altitude() {
+    return this.#altitude;
+  }
+
+  get altitudeAccuracy() {
+    return this.#altitudeAccuracy;
+  }
+
+  get heading() {
+    return this.#heading;
+  }
+
+  get speed() {
+    return this.#speed;
+  }
+
+  get timestamp() {
+    return this.#timestamp;
+  }
+
+  /**
+   * Tools to access/manage the GeoCoordinates instance
+   */
   get value() {
     return [this.#latitude, this.#longitude];
   }
@@ -91,6 +159,10 @@ class GeoCoordinates {
 
   isSameAs(other, precision = 0) {
     return this.getDistanceTo(other) <= precision;
+  }
+
+  isEqual(other) {
+    return this.latitude === other.latitude && this.longitude === other.longitude;
   }
 
   /**
@@ -161,7 +233,16 @@ class GeoCoordinates {
   }
 
   toObject() {
-    return { latitude: this.#latitude, longitude: this.#longitude };
+    return {
+      latitude: this.#latitude,
+      longitude: this.#longitude,
+      accuracy: this.#accuracy,
+      altitude: this.#altitude,
+      altitudeAccuracy: this.#altitudeAccuracy,
+      heading: this.#heading,
+      speed: this.#speed,
+      timestamp: this.#timestamp
+    };
   }
 
   toString() {

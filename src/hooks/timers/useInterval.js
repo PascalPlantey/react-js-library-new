@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 
-import { useLast, useOnDismount, useOnMount } from '../react';
+import useLast from '../react/useLast';
+import useOnMount from '../react/useOnMount';
+import useOnDismount from '../react/useOnDismount';
 
 /**
  * Execute callback every interval ms

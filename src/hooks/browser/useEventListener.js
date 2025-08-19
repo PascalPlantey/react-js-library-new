@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { isFunction, getEventTarget } from '../../tools';
-import { useLast } from '../react';
+import useLast from '../react/useLast';
+
+import isFunction from '../../tools/is/isFunction';
+import getEventTarget from '../../tools/browser/getEventTarget';
 
 /**
  * @description Fire a function when a document event happens

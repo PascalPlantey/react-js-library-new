@@ -1,6 +1,9 @@
-import { GeoCoordinates, EventEmitterMixin } from ".";
-
 import { Geolocation } from '@capacitor/geolocation';
+
+import isCapacitorAvailable from "../browser/isCapacitorAvailable";
+
+import GeoCoordinates from "./GeoCoordinates";
+import { EventEmitterMixin } from "./EventEmitter";
 
 /**
  * Class representing the current GPS position and providing utilities to watch for position changes.
@@ -33,18 +36,22 @@ import { Geolocation } from '@capacitor/geolocation';
  */
 export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates) {
   #watchId = null;
+  #precision = 0;
+  #options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
 
-  constructor(watchNow = false, ...args) {
+  constructor(watchNow = false, precision, options, ...args) {
     super(...args);
+    if (precision) this.#precision = precision;
+    if (options) this.#options = options;
 
     if (watchNow)
       this.startWatching();
   }
 
   destroy() {
-    this.emit('destroy');
     this.stopWatching();
     this.offAll();
+    this.emit('destroy');
   }
 
   get watching() {
@@ -55,22 +62,26 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
     value ? this.startWatching() : this.stopWatching();
   }
 
-  #handleNewPosition({ coords: { latitude, longitude } }, precision) {
-    const newPosition = [latitude, longitude];
+  #handleNewPosition(position, precision) {
+    const newPosition = new GeoCoordinates(position);
+
     if (this.getDistanceTo(newPosition) > precision) {
       this.from(newPosition);
-      this.emit('positionchange', { latitude, longitude });
+      this.emit('positionchange', newPosition);
     }
   }
 
-  startWatching(precision = 0, options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }) {
+  startWatching(options, precision) {
+    if (!options) options = this.#options;
+    if (!precision) precision = this.#precision;
+
     if (this.watching)
       ;
 
     else if (!Geolocation && !navigator.geolocation)
       this.emit('error', new Error("Geolocation is not supported by this device"));
 
-    else if (Geolocation)
+    else if (Geolocation && isCapacitorAvailable())
       Geolocation.watchPosition(
         options,
         (position, error) => {
@@ -83,7 +94,7 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
     else
       this.#watchId = navigator.geolocation.watchPosition(
         position => this.#handleNewPosition(position, precision),
-        error => this.emit('error', error),
+        error    => this.emit('error', error),
         options
       );
 
@@ -95,6 +106,7 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
   stopWatching() {
     if (this.watching) {
       Geolocation ? Geolocation.clearWatch({ id: this.#watchId }) : navigator.geolocation.clearWatch(this.#watchId);
+      this.#watchId = null;
       this.emit('stopWatching');
     }
 

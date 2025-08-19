@@ -6,5 +6,4 @@ export { default as useDebounceResult } from './useDebounceResult.js';
 export { default as useDebounceValue } from './useDebounceValue.js';
 export { default as useNewClassRef } from './useNewClassRef.js';
 export { default as useObject } from './useObject.js';
-export { default as useSpeedoMeter } from './useSpeedometer.js';
 export { default as useWebWorker } from './useWebWorker.js';

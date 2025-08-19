@@ -1,11 +1,14 @@
 import { useRef } from "react";
 
 import useEventListener from "./useEventListener";
-import { useLast, useOnMount } from "../react";
+import useOnMount from "../react/useOnMount";
+import useLast from "../react/useLast";
 
-import { getEventTarget, getEventClientXY } from "../../tools/browser";
-import { noop, toIterable  } from "../../tools/misc";
-import { isString } from "../../tools/is";
+import getEventTarget from "../../tools/browser/getEventTarget";
+import getEventClientXY from "../../tools/browser/getEventClientXY";
+import noop from "../../tools/misc/noop";
+import toIterable from "../../tools/misc/toIterable";
+import isString from "../../tools/is/isString";
 
 
 /**

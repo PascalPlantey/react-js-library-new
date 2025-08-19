@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 
 import { App } from '@capacitor/app';
 
-import { useBoolean } from "../utils";
+import useBoolean from '../utils/useBoolean';
 import useEventListener from './useEventListener';
 
-import { isCapacitorAvailable } from '../../tools/browser';
+import isCapacitorAvailable from '../../tools/browser/isCapacitorAvailable';
 
 /**
  * Custom React hook that tracks the visibility state of the document.

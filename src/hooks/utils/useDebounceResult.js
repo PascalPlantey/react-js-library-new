@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import useDebounce from "./useDebounce";
 
-import { resolve } from '../../tools/misc';
+import resolve from "../../tools/misc/resolve";
 
 /**
  * Executes a function after a debounced timeout and returns the result.

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import useLast from './useLast';
 
-import { isFunction } from '../../tools/is';
+import isFunction from '../../tools/is/isFunction';
 
 /**
  * Custom React hook that invokes a callback function when the component is unmounted.
@@ -13,19 +13,17 @@ const useOnDismount = fn => {
   const fnRef = useLast(fn);  // Stable ref that always points to latest fn
 
   useEffect(() => {
-    // Return cleanup function that will run on unmount
-    return () => {
-      if (isFunction(fnRef.current)) {
+    const fn = fnRef.current;
+    if (!isFunction(fn))
+      console.error("useOnDismount: Provided callback is not a function:", typeof fn);
+    else
+      return () => {
         try {
-          fnRef.current();
+          fn();
         } catch (error) {
-          console.error("Error during onDismount:", error);
+          console.error("useOnDismount: exception while running provided function", error);
         }
-      } else {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        console.warn("useOndismount: Provided callback is not a function:", typeof fnRef.current);
-      }
-    };
+      };
   }, [fnRef]);                // Effect runs once, fnRef is stable and does not change
 };
 

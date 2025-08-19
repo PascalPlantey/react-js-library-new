@@ -1,6 +1,10 @@
-import { ExtString } from './';
-import { isArray, isFunction, isString } from '../is';
-import { toIterable } from '../misc';
+import isArray from '../is/isArray';
+import isFunction from '../is/isFunction';
+import isString from '../is/isString';
+
+import toIterable from '../misc/toIterable';
+
+import ExtString from './ExtString';
 
 const defaultRadical = 'Others: ';
 

@@ -1,6 +1,5 @@
 import { useRef } from "react";
 
-
 /**
  * Hook that provides a way to check if dependencies have changed, useful for development time
  *

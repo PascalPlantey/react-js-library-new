@@ -1,4 +1,4 @@
-import { isString } from "../is";
+import isString from '../is/isString';
 
 /**
  * Truncates a string to a specified length and appends a trailing string if truncation occurs.

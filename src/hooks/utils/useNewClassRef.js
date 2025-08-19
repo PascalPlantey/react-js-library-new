@@ -1,5 +1,7 @@
 import { useRef } from "react";
 
+import isFunction from "../../tools/is/isFunction";
+
 /**
  * Creates a reference from the result of a function. If a reference is initialized with a 'new class()' the object will be constructed
  * at every render, even if this new object will not be used. The useNewClassRef avoids this pittfall, see
@@ -14,8 +16,12 @@ import { useRef } from "react";
 const useNewClassRef = func => {
   const ref = useRef();
 
-  if (!ref.current)
+  if (!ref.current) {
+    if (!isFunction(func))
+      throw new Error("useNewClassRef requires a function that returns a new object");
+
     ref.current = func();
+  }
 
   return ref.current;
 };

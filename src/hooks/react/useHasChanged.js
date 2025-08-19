@@ -2,7 +2,7 @@ import isEqual from 'lodash.isequal';
 
 import usePrev from "./usePrev";
 
-import { isFunction } from "../../tools/is";
+import isFunction from '../../tools/is/isFunction';
 
 /**
  * Custom React hook that determines if the provided value has changed since the last render.

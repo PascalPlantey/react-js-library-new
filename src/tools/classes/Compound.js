@@ -1,5 +1,7 @@
-import { ExtString } from './';
-import { isIterable, isString } from '../is';
+import isIterable from '../is/isIterable.js';
+import isString from '../is/isString.js';
+
+import ExtString from './ExtString.js';
 
 /**
  * Building/Destructuring compound keys. Useful when building a Set or Map with unique keys

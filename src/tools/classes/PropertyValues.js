@@ -1,5 +1,7 @@
-import { ExtMap, Compound } from './';
-import { toIterable } from '../misc';
+import toIterable from '../misc/toIterable';
+
+import ExtMap from './ExtMap';
+import Compound from './Compound';
 
 /**
  * Collect property values from a collection of objects (or an object) in a Set

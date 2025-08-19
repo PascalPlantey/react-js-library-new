@@ -1,4 +1,4 @@
-import { ExtMap } from "./";
+import ExtMap from "./ExtMap";
 
 /**
  * EventEmitter is a class for managing custom events and their listeners.

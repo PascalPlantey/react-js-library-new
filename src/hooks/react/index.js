@@ -7,4 +7,3 @@ export { default as useOnDismount } from './useOnDismount.js';
 export { default as useOnMount } from './useOnMount.js';
 export { default as usePrev } from './usePrev.js';
 export { default as useRender } from './useRender.js';
-export { default as useRunOnce } from './useRunOnce.js';

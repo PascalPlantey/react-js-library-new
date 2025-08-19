@@ -30,6 +30,7 @@
     "dev:lib": "nodemon --watch src --ext js,jsx --exec \"npm run build\"",
     "build": "vite build && npm link",
     "tgz": "npm run build && npm pack",
+    "dev:tgz": "nodemon --watch src --ext js,jsx --exec \"npm run tgz\"",
     "push": "rimraf dist && tsc && vite build && npm link",
     "preview": "vite preview",
     "build:types": "tsc"

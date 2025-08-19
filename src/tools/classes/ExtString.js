@@ -1,4 +1,4 @@
-import { isPrimitive } from "../is";
+import isPrimitive from "../is/isPrimitive";
 
 /**
  * Extensions to the string class

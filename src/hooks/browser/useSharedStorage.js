@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
-import { useBoolean } from '../utils';
+import useBoolean from '../utils/useBoolean';
 
 // Crypto utility functions using AES-256-GCM
 const deriveKey = async (password) => {

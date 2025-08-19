@@ -1,8 +1,10 @@
 import { useCallback, useRef } from "react";
 
-import { useLast, useOnDismount, useRunOnce } from "../react";
+import useLast from "../react/useLast";
+import useOnMount from "../react/useOnMount";
+import useOnDismount from "../react/useOnDismount";
 
-import { isFunction } from "../../tools";
+import isFunction from "../../tools/is/isFunction";
 
 /**
  * Custom React hook to handle timeouts with automatic cleanup.
@@ -45,9 +47,7 @@ const useTimeout = (actionFn, delay = 3000, now = false) => {
 
   }, [fn, clearTimeoutHandler, delay]);
 
-  useRunOnce(() => {
-    now && startTimeout();
-  });
+  useOnMount(() => now && startTimeout());
   useOnDismount(clearTimeoutHandler);
 
   return { startTimeout, clearTimeout: clearTimeoutHandler };

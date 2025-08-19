@@ -1,5 +1,6 @@
 import { useRef, useCallback } from 'react';
-import { useLast } from '../react';
+
+import useLast from '../react/useLast';
 
 /**
  * React hook that creates a debounced version of a function

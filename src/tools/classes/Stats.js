@@ -1,5 +1,7 @@
-import { ExtArray, ExtMath } from "./";
-import { isIterable } from "../is";
+import isIterable from '../is/isIterable';
+
+import ExtArray from './ExtArray';
+import ExtMath from './ExtMath';
 
 /**
  * Mean and standard deviation calculations. The class keep all the values added to the serie to be able

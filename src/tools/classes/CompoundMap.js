@@ -1,5 +1,7 @@
-import { ExtMap, Compound } from "./";
-import { resolve } from "../misc";
+import resolve from "../misc/resolve";
+
+import ExtMap from "./ExtMap";
+import Compound from "./Compound";
 
 export default class CompoundMap extends ExtMap {
   /**

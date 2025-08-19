@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { KeepAwake } from "@capacitor-community/keep-awake";
 
-import { isCapacitorAvailable } from "../../tools";
+import isCapacitorAvailable from "../../tools/browser/isCapacitorAvailable";
 
 /**
  * React hook that prevents the device from sleeping with pause/resume control.

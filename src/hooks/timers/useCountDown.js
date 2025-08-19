@@ -1,9 +1,9 @@
 import { useRef, useCallback, useEffect } from 'react';
 
-import { isFunction } from '../../tools/is';
-
 import useTimer from './useTimer';
-import { useLast } from '../react';
+import useLast from '../react/useLast';
+
+import isFunction from '../../tools/is/isFunction';
 
 /**
  * Execute a function after initialSeconds has elapsed

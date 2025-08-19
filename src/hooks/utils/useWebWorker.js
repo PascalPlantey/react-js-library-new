@@ -1,9 +1,10 @@
 import { useRef, } from 'react';
 
 import useObject from './useObject';
-import { useOnDismount } from '../react';
+import useOnDismount from '../react/useOnDismount';
 
-import { Enum, WebWorker } from '../../tools/classes';
+import Enum from '../../tools/classes/Enum';
+import WebWorker from '../../tools/classes/WebWorker';
 
 /**
  * _Worker Specialized Worker to enable the definition of the useWorker

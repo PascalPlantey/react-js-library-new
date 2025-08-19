@@ -1,4 +1,4 @@
-import { isFunction } from "../is";
+import isFunction from "../is/isFunction";
 
 /**
  * Resolves a value or a function. If the first argument is a function, it is called with the fallback and any additional arguments.

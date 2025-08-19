@@ -1,4 +1,4 @@
-import { isArray } from "../is";
+import isArray from "../is/isArray";
 
 /**
  * @description Provides some static function not in standard Math

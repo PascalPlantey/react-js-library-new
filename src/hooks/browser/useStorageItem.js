@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useNewClassRef } from '../utils';
+import useNewClassRef from '../utils/useNewClassRef';
 
-import { StorageItem } from '../../tools';
+import StorageItem from '../../tools/classes/StorageItem';
 
 /**
  * Custom React hook for managing a value in localStorage or sessionStorage with state synchronization.

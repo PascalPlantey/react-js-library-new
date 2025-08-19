@@ -1,8 +1,9 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-import { useLast } from '../react';
-import { useObject, useBoolean } from '../utils';
+import useLast from '../react/useLast';
+import useObject from '../utils/useObject';
+import useBoolean from '../utils/useBoolean';
 
 const initialObj = {
   loading: true,

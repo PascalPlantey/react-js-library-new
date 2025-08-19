@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 
-import { toIterable } from "../../tools/misc";
+import toIterable from "../../tools/misc/toIterable";
 
 /**
  * Use an object as state with basic operations. Useful to avoid managing operations like setState(prev => ({ ...prev, other: 4 })

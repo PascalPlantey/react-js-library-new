@@ -1,5 +1,7 @@
-import { isIterable, isString } from "../is";
-import { toIterable } from "../misc";
+import isIterable from '../is/isIterable';
+import isString from '../is/isString';
+
+import toIterable from '../misc/toIterable';
 
 class ExtArray extends Array {
   constructor(args) {

@@ -1,76 +1,46 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Geolocation } from '@capacitor/geolocation';
+import useOnDismount from '../react/useOnDismount';
+import useNewClassRef from '../utils/useNewClassRef';
 
-import { GeoCoordinates } from '../../tools/classes';
+import noop from '../../tools/misc/noop';
+
+import GeoCoordinates from '../../tools/classes/GeoCoordinates';
+import CurrentGpsPosition from '../../tools/classes/CurrentGpsPosition';
 
 /**
- * Custom React hook to obtain and watch GPS coordinates using the browser's Geolocation API.
+ * Custom React hook to watch and retrieve GPS coordinates.
  *
- * @param {Object} [options={ enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }] - Geolocation API options
- * @param {boolean} [active=true] - Whether to actively watch for position changes
- * @param {number} [precision=0] - Precision for updating coordinates on position change, in meters
- * @returns {{ coordinates: GeoCoordinates | undefined, error: (string|null) }} An object containing the current coordinates and any error message
- * { coordinates, error }
+ * @param {GeoCoordinates|Array|Object} dflt - The default coordinates to use before a position is acquired.
+ * @param {Object} [options] - Geolocation options.
+ * @param {boolean} [options.enableHighAccuracy=true] - Indicates if high accuracy is desired.
+ * @param {number} [options.timeout=2000] - Maximum time (ms) to wait for a position.
+ * @param {number} [options.maximumAge=0] - Maximum age (ms) of cached position.
+ * @param {boolean} [active=true] - Whether to actively watch for position changes.
+ * @param {number} [precision=0] - Precision for comparing coordinates.
+ * @returns {{ coordinates: GeoCoordinates|Array|Object, error: string|null }} An object containing the current coordinates and any error message.
  */
 const useGpsCoordinates = (
   dflt,
-  options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 },
+  options = { enableHighAccuracy: true, timeout: 2000, maximumAge: 0 },
   active = true,
   precision = 0
 ) => {
   const [coordinates, setCoordinates] = useState(dflt);
   const [error, setError] = useState(null);
-  const optionsRef = useRef(options);
-  const watchIdRef = useRef(null);
+
+  const currentPosition = useNewClassRef(() =>
+    new CurrentGpsPosition(false, precision, options, dflt)                                 // Start inactive
+    .on('error'         , 'useGpsCoordinates', error        => setError(error))
+    .on('positionchange', 'useGpsCoordinates', geolocation  => setCoordinates(geolocation))
+  );
 
   useEffect(() => {
-    const handlePositionChange = ({ coords: { latitude, longitude } }) => {
-      const newPos = new GeoCoordinates([latitude, longitude]);
-      setCoordinates(prev =>
-        !prev || !prev.isSameAs(newPos, precision) ? newPos : prev
-      );
-      if (error) setError(null);
-    };
+    if (currentPosition.watching !== active)                                                // Check also done in CurrentGpsPosition
+      currentPosition.watching = active;                                                    // Let the effect manage the active status
+  }, [active, currentPosition]);
 
-    const handleError = ({ code, message }) => {
-      if (code !== 3)
-        console.warn(`Geolocation error ${code}: ${message}`);
-      setError(message);
-    };
-
-    const clearWatch = () => {
-      if (watchIdRef.current) {
-        Geolocation
-          ? Geolocation.clearWatch({ id: watchIdRef.current })
-          : navigator.geolocation.clearWatch(watchIdRef.current);
-        watchIdRef.current = null;
-      }
-    };
-
-    if (!Geolocation && !navigator.geolocation)
-      return handleError({ code: 0, message: "La géolocalisation n'est pas supportée par cet appareil" });
-
-    else if (!active)                   // Stop watching requested
-      return clearWatch();
-
-    else if (Geolocation)               // Trying with Capacitor
-      Geolocation.watchPosition(
-        optionsRef.current,
-        (position, error) => error ? handleError(error) : handlePositionChange(position)
-      ).then(watchId => {
-        watchIdRef.current = watchId;
-      });
-
-    else                                // Fallback to browser's Geolocation API
-      watchIdRef.current = navigator.geolocation.watchPosition(
-        handlePositionChange,
-        handleError,
-        optionsRef.current
-      );
-
-    return clearWatch;
-  }, [active, error, precision]);
+  useOnDismount(currentPosition.current?.destroy || noop);
 
   return { coordinates, error };
 };
