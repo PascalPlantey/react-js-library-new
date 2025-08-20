@@ -1,5 +1,4 @@
 export { default as CSSVariable } from "./CSSVariable.js";
-export { default as CurrentPosition } from "./CurrentPosition.js";
 export { default as Enum } from "./Enum";
 export * from "./EventEmitter";
 export { default as ExtArray } from "./ExtArray";
@@ -10,6 +9,7 @@ export { default as ExtMath } from "./ExtMath";
 export { default as ExtSet } from "./ExtSet";
 export { default as ExtString } from "./ExtString";
 export { default as GeoCoordinates } from "./GeoCoordinates";
+export { default as CurrentGpsPosition } from "./CurrentGpsPosition.js";
 export { default as ItemsCounter } from "./ItemsCounter";
 export { default as MapOfSet } from "./MapOfSet";
 export { default as PropertyValues } from "./PropertyValues";

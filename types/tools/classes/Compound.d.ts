@@ -8,7 +8,7 @@ export default Compound;
  *   [cloud, certification] = Compound.destructure(compound);                        // ['Service Cloud', 'Field Service Consultant']
  */
 declare class Compound {
-    static "__#4@#regexp": RegExp;
+    static "__#5@#regexp": RegExp;
     /**
      * @static
      * @description Is value a compound string?

@@ -52,4 +52,4 @@ declare class PropertyValues extends Set<any> {
      */
     [Symbol.iterator](): Generator<any, void, unknown>;
 }
-import { ExtMap } from './';
+import ExtMap from './ExtMap';

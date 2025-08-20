@@ -10,9 +10,19 @@ declare class GeoCoordinates {
     get latitude(): number;
     set longitude(value: number);
     get longitude(): number;
+    get accuracy(): any;
+    get altitude(): any;
+    get altitudeAccuracy(): any;
+    get heading(): any;
+    get speed(): any;
+    get timestamp(): any;
     set value(input: number[]);
+    /**
+     * Tools to access/manage the GeoCoordinates instance
+     */
     get value(): number[];
     isSameAs(other: any, precision?: number): boolean;
+    isEqual(other: any): boolean;
     /**
      * Calculates the distance in meters from the current GeoCoordinates instance to another set of coordinates
      * using the Haversine formula.
@@ -41,6 +51,12 @@ declare class GeoCoordinates {
     toObject(): {
         latitude: number;
         longitude: number;
+        accuracy: any;
+        altitude: any;
+        altitudeAccuracy: any;
+        heading: any;
+        speed: any;
+        timestamp: any;
     };
     toString(): string;
     get [Symbol.toStringTag](): string;
