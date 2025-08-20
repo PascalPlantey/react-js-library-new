@@ -1,4 +1,5 @@
 // React lifecycle hooks exports
+export { default as useBeforeMount } from './useBeforeMount.js';
 export { default as useCheckDepsChanges } from './useCheckDepsChanges.js';
 export { default as useHasChanged } from './useHasChanged.js';
 export { default as useIsFirstRender } from './useIsFirstRender.js';
