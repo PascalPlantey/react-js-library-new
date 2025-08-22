@@ -45,7 +45,7 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
     if (options) this.#options = options;
 
     if (watchNow)
-      this.startWatching();
+      this.startWatching(this.#options, this.#precision);
   }
 
   destroy() {
@@ -59,7 +59,7 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
   }
 
   set watching(value) {
-    value ? this.startWatching() : this.stopWatching();
+    value ? this.startWatching(this.#options, this.#precision) : this.stopWatching();
   }
 
   #handleNewPosition(position, precision) {
@@ -72,9 +72,6 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
   }
 
   startWatching(options, precision) {
-    if (!options) options = this.#options;
-    if (!precision) precision = this.#precision;
-
     if (this.watching)
       ;
 

@@ -18,7 +18,7 @@ const useNewClassRef = func => {
 
   if (!ref.current) {
     if (!isFunction(func))
-      throw new Error("useNewClassRef requires a function that returns a new object");
+      console.warn("useNewClassRef, requires a function that returns a new object got:", typeof func);
 
     ref.current = func();
   }
