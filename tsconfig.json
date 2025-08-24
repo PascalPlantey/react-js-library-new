@@ -21,7 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "react-js-library": ["./src/index.js"],
-      "react-js-library/*": ["./src/*"]
+      "react-js-library-new/*": ["./src/*"]
     }
   },
   "include": [

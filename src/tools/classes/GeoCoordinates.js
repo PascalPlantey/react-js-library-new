@@ -61,7 +61,7 @@ class GeoCoordinates {
         this.#timestamp = input.timestamp;
 
       // Check if input is an array
-      } else if (Array.isArray(input) && input.length > 2) {
+      } else if (Array.isArray(input) && input.length >= 2) {
         this.#latitude = Number(input[0]);
         this.#longitude = Number(input[1]);
         this.#clearExtra();
