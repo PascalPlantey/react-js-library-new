@@ -65,7 +65,7 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
   #handleNewPosition(position, precision) {
     const newPosition = new GeoCoordinates(position);
 
-    if (this.getDistanceTo(newPosition) > precision) {
+    if (this.getDistanceTo(newPosition) > precision ?? this.#precision) {
       this.from(newPosition);
       this.emit('positionchange', newPosition);
     }
@@ -80,22 +80,22 @@ export default class CurrentGpsPosition extends EventEmitterMixin(GeoCoordinates
 
     else if (Geolocation && isCapacitorAvailable())
       Geolocation.watchPosition(
-        options,
+        options ?? this.#options,
         (position, error) => {
           if (error)  this.emit('error', error);
-          else        this.#handleNewPosition(position, precision);
+          else        this.#handleNewPosition(position, precision ?? this.#precision);
         }
       )
       .then(watchId => this.#watchId = watchId);
 
     else
       this.#watchId = navigator.geolocation.watchPosition(
-        position => this.#handleNewPosition(position, precision),
+        position => this.#handleNewPosition(position, precision ?? this.#precision),
         error    => this.emit('error', error),
-        options
+        options ?? this.#options
       );
 
-    this.emit('startWatching', options);
+    this.emit('startWatching', options ?? this.#options);
 
     return this;
   }
