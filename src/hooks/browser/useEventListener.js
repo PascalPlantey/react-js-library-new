@@ -44,23 +44,23 @@ const useEventListener = (name, fn, elt = window, immediately = true, options = 
     }
   }, []);
 
-  // Use our own listener to track if it is automatically removed by the browser (options.once === true)
-  const listener = useCallback(evt => {
-    fnRef.current(evt);                                             // Callback to the latest function with the event
-    if (once) {
-      refAbort.current = undefined;                                 // Listener has been stopped
-      setWorking(false);                                            // Listener has been called and eventListener automatically removed
-    }
-  }, [once, fnRef]);                                                // fnRef is stable but keeping for ESLint consistency
-
   // Get an abort signal to make sure our listener can be stopped anytime
   const startListener = useCallback(() => {
+    // Use our own listener to track if it is automatically removed by the browser (options.once === true)
+    const listener = evt => {
+      fnRef.current(evt);                                           // Callback to the latest function with the event
+      if (once) {
+        refAbort.current = undefined;                               // Listener has been stopped
+        setWorking(false);                                          // Listener has been called and eventListener automatically removed
+      }
+    };
+
     if (refElt?.current) {
       stopListener();                                               // Stop listening if it already started
       refAbort.current = new AbortController();                     // Restart with a a new AbortController for this listener
       refElt.current?.addEventListener(name, listener, { capture, once, passive, signal: refAbort.current.signal });
     }
-  }, [capture, once, passive, listener, name, stopListener]);
+  }, [capture, once, passive, name, stopListener]);
 
   useEffect(() => {                                                 // (Re)Start listener when it changes
     if (working && element) {
@@ -74,7 +74,12 @@ const useEventListener = (name, fn, elt = window, immediately = true, options = 
     setWorking(running => !running);
   }, []);
 
-  return({ working, toggle });
+  return({
+    working,
+    toggle,
+    startListener,
+    stopListener
+  });
 };
 
 export default useEventListener;

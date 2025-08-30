@@ -15,7 +15,7 @@ const useInterval = (callback, interval = 1000, immediately = true) => {
   const [timer, setTimer] = useState();
   const fn = useLast(callback);                     // Last version of the callback function
 
-  const handleStop = useCallback(() =>
+  const stop = useCallback(() =>
     setTimer(prev => {
       if (prev) {
         clearInterval(prev);
@@ -26,30 +26,27 @@ const useInterval = (callback, interval = 1000, immediately = true) => {
     })
   , []);
 
-  const handleStart = useCallback(() => 
+  const start = useCallback(() => 
     setTimer(prev => {
       if (prev)
-        return prev;                              // Already running, do nothing
+        return prev;                                // Already running, do nothing
       else
-        return setInterval(fn.current, interval); // Start new timer
+        return setInterval(fn.current, interval);   // Start new timer
     })
-  , [fn, interval, setTimer]);
+  , [fn, interval]);
 
-  const handleToggle = useCallback(
-    () => timer ? handleStop() : handleStart()
-  , [timer, handleStart, handleStop]);
+  const toggle = useCallback(
+    () => timer ? stop() : start()
+  , [timer, start, stop]);
 
-  useOnMount(() => immediately && handleStart());
-  useOnDismount(() => {
-    timer && clearInterval(timer);
-    setTimer(undefined);                            // In strict mode, this is necessary to avoid remount issues
-  });
+  useOnMount(() => immediately && start());
+  useOnDismount(stop);
 
   return({
     working: timer !== undefined,
-    toggle: handleToggle,
-    stop: handleStop,
-    start: handleStart
+    toggle,
+    stop,
+    start
   });
 };
 
