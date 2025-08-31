@@ -48,6 +48,13 @@ import ExtMap from "./ExtMap";
 export class EventEmitter {
   #handlersMap = new ExtMap();
 
+  // Cleans up the map by removing empty event listeners
+  #cleanupEvents() {
+    this.#handlersMap.forEach((listeners, eventName) => {
+      if (!listeners.size) this.#handlersMap.delete(eventName);
+    });
+  }
+
   hasEvent(eventName) {
     return this.#handlersMap.has(eventName);
   }
@@ -67,18 +74,31 @@ export class EventEmitter {
     if (this.#handlersMap.has(eventName)) {
       this.#handlersMap.get(eventName).delete(listenerName);
 
-      if (!this.#handlersMap.get(eventName).size)
-        this.#handlersMap.delete(eventName);
+      this.#cleanupEvents();
     }
 
     return this;
   }
 
-  // Removes all listeners for the specified event
-  offAll(eventName) {
-    if (this.#handlersMap.has(eventName))
-      this.#handlersMap.delete(eventName);
+  // Removes a listener for the specified event
+  offListener(listenerName) {
+    this.#handlersMap.forEach(listeners => listeners.delete(listenerName));
+    this.#cleanupEvents();
 
+    return this;
+  }
+
+  // Remove all listeners for the specified event
+  offEvent(eventName) {
+    if (this.#handlersMap.has(eventName))
+      this.#handlersMap.get(eventName).clear();
+
+    return this;
+  }
+
+  // Removes all listeners
+  offAll() {
+    this.#handlersMap.clear();
     return this;
   }
 
@@ -88,13 +108,7 @@ export class EventEmitter {
       this
       .#handlersMap
       .get(eventName)
-      .forEach((callbackFn, listenerName) => {
-        try {
-          callbackFn(...args);
-        } catch (error) {
-          console.error(`Error occurred in event handler for "${eventName}" (name: ${listenerName}):`, error);
-        }
-      });
+      .forEach(callbackFn => callbackFn(...args));
   }
 
   // Returns all listeners for the specified event
