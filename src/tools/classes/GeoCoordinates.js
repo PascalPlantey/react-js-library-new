@@ -1,3 +1,4 @@
+import isArray from "../is/isArray";
 import isNumber from "../is/isNumber";
 
 class GeoCoordinates {
@@ -61,7 +62,7 @@ class GeoCoordinates {
         this.#timestamp = input.timestamp;
 
       // Check if input is an array
-      } else if (Array.isArray(input) && input.length >= 2) {
+      } else if (isArray(input) && input.length >= 2) {
         this.#latitude = Number(input[0]);
         this.#longitude = Number(input[1]);
         this.#clearExtra();
@@ -93,10 +94,12 @@ class GeoCoordinates {
   static isValid(obj) {
     return (
       obj &&
-      typeof obj.latitude === 'number' &&
-      typeof obj.longitude === 'number' &&
-      !isNaN(obj.latitude) &&
-      !isNaN(obj.longitude)
+      ((obj instanceof GeoCoordinates) ||
+       (obj instanceof GeolocationPosition) ||
+       (typeof obj.latitude === 'number' && typeof obj.longitude === 'number') ||
+       (isArray(obj) && obj.length === 2 && obj.every(isNumber)) ||
+       (typeof obj.coords === 'object' && 'latitude' in obj.coords && 'longitude' in obj.coords)
+      )
     );
   }
 

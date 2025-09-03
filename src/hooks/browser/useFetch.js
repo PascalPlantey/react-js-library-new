@@ -23,7 +23,7 @@ const initialObj = {
  * @param {number} [debounce=0] Debounce delay in ms (0 = pas de debounce)
  * @returns {[Object, Function, Function]} Tuple containing:
  * - Fetch result object with properties: loading, ok, status, statusText, data, error
- * - Function to toggle the fetch state
+ * - Function to toggle the fetch state (re-fetch)
  * - Function to abort the fetch request
  * 
  * @example
@@ -49,13 +49,11 @@ const useFetch = (api, url, options, debounce = 0) => {
       fetch(encodeURI(new URL(api, url)), { ...optionsRef.current, signal: refController.current.signal })
       .then(async result => {
         const { ok, status, statusText } = result;
-        let data;
         try {
-          data = await result.json();
+          const data = await result.json();
           set({ loading: false, ok, status, statusText, data, error: undefined });
         } catch (error) {
-          data = undefined;
-          set({ loading: false, ok, status, statusText, data, error });
+          set({ loading: false, ok, status, statusText, data: undefined, error });
         }
       })
       .catch(error => set({ loading: false, ok: false, error }));
@@ -65,7 +63,7 @@ const useFetch = (api, url, options, debounce = 0) => {
     else              doFetch();
 
     return () => {
-      if (timer) clearTimeout(timer);
+      clearTimeout(timer);
       refController.current?.abort();
     };
   }, [api, url, optionsRef, value, set, debounce]);

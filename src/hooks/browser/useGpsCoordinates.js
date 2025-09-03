@@ -26,18 +26,23 @@ const useGpsCoordinates = (
   active = true,
   precision = 0
 ) => {
-  const [coordinates, setCoordinates] = useState(dflt);
+  // Undefined is authorized until coordinates are available; we use a GeoCoordinates instance otherwise
+  // and let it's constructor verify the validity of dflt
+  const [coordinates, setCoordinates] = useState(() =>
+    dflt === undefined ? dflt : new GeoCoordinates(dflt)
+  );
   const [error, setError] = useState(null);
 
   const currentPosition = useNewClassRef(() =>
-    new CurrentGpsPosition(false, precision, options, dflt)                                 // Start inactive
+    new CurrentGpsPosition(false, precision, options, dflt)                   // Start inactive
     .on('error'         , 'useGpsCoordinates', error        => setError(error))
     .on('positionchange', 'useGpsCoordinates', geolocation  => setCoordinates(geolocation))
   );
 
+  // Synchronize active status with the props
   useEffect(() => {
-    if (currentPosition.watching !== active)                                                // Check also done in CurrentGpsPosition
-      currentPosition.watching = active;                                                    // Let the effect manage the active status
+    if (currentPosition.watching !== active)                                  // Check also done in CurrentGpsPosition
+      currentPosition.watching = active;
   }, [active, currentPosition]);
 
   useOnDismount(currentPosition.current?.destroy || noop);

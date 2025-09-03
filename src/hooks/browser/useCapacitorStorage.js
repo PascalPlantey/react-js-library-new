@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Preferences } from '@capacitor/preferences';
 
@@ -13,17 +13,16 @@ const useCapacitorStorage = (key, defaultValue) => {
   const [value, setValue] = useState(defaultValue);
 
   useEffect(() => {
-    const loadValue = async () => {
+    (async () => {
       const { value: stored } = await Preferences.get({ key });
       setValue(stored ? JSON.parse(stored) : defaultValue);
-    };
-    loadValue();
+    })();
   }, [defaultValue, key]);
 
-  const updateValue = async (newValue) => {
+  const updateValue = useCallback(newValue => {
     setValue(newValue);
-    await Preferences.set({ key, value: JSON.stringify(newValue) });
-  };
+    Preferences.set({ key, value: JSON.stringify(newValue) });    // Promise result not checked
+  }, [key]);
 
   return [value, updateValue];
 };

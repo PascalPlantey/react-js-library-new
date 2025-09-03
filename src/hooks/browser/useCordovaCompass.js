@@ -85,12 +85,13 @@ const useCordovaCompass = (active = false, throttleMs = 500) => {
 
     // Normal compass logic for geographical north
     const result = getCompassRotation(prevOrientationRef.current || 0, orientation);
-    
-    setDisplayAngle(prev => {
-      const newAngle = prev + result;
-      displayAngleRef.current = newAngle;                     // Keep ref in sync
-      return newAngle;
-    });
+
+    if (Math.abs(result) >= 1)                                // Difference >= 1 degree, state update
+      setDisplayAngle(prev => {
+        const newAngle = prev + result;
+        displayAngleRef.current = newAngle;                   // Keep ref in sync
+        return newAngle;
+      });
 
     prevOrientationRef.current = orientation;
   }, [orientation, isActive, isAvailable]);

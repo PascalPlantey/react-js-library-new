@@ -33,11 +33,9 @@ const useDeviceCompass = (active = true, throttleMs = 100) => {
   const reallyActive = active && appVisible;
 
   useEffect(() => {
-    const throttledSetOrientation = (newOrientation, nativeTimestamp) => {
-      // Use Cordova sensor timestamp when available, fallback to system time when using browser
-      const timeToUse = nativeTimestamp || Date.now();
-      if (timeToUse - lastUpdateRef.current >= throttleMs) {
-        lastUpdateRef.current = timeToUse;
+    const throttledSetOrientation = (newOrientation, timestamp) => {
+      if (timestamp - lastUpdateRef.current >= throttleMs) {
+        lastUpdateRef.current = timestamp;
         setOrientation(newOrientation);
       }
     };
@@ -51,22 +49,22 @@ const useDeviceCompass = (active = true, throttleMs = 100) => {
       return;
     }
 
+    // Use native Cordova compass API directly (more reliable than Ionic wrapper)
     if (reallyActive && window.cordova && navigator?.compass?.watchHeading) {
-      // Use native Cordova compass API directly (more reliable than Ionic wrapper)
       const watchID = navigator.compass.watchHeading(
-        (heading) => throttledSetOrientation(heading.magneticHeading, heading.timestamp), 
-        (error) => console.error("Native compass error:", error), 
+        ({ magneticHeading, timestamp }) => throttledSetOrientation(magneticHeading, timestamp),
+        error => console.error("Native Cordova compass error:", error),
         { frequency: throttleMs }
       );
 
       return () => navigator.compass.clearWatch(watchID);
-    } else if (reallyActive) {
-      // Fallback to browser's deviceorientationabsolute event
-      const handleOrientation = event => {
-        const alpha = event.alpha;
-        if (alpha !== null) {
-          throttledSetOrientation(alpha);
-        }
+    }
+
+    // Fallback to browser's deviceorientationabsolute event
+    else if (reallyActive) {
+      const handleOrientation = ({ alpha }) => {
+        if (alpha !== null)
+          throttledSetOrientation(alpha, Date.now());
       };
 
       // Trying to get 'ondeviceorientationabsolute' as the other event is not a magnetic absolute orientation

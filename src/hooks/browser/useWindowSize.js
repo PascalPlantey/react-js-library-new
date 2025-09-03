@@ -3,17 +3,6 @@ import { useState } from 'react';
 import useEventListener from './useEventListener';
 
 /**
- * @typedef {Object} WindowSize
- * @property {number} width - Window width in pixels
- * @property {number} height - Window height in pixels
- */
-
-/**
- * @typedef {Object} UseWindowSizeOptions
- * @property {number} [step=30] - Minimum resize pixels to trigger update
- * @property {boolean} [immediately=true] - Start listening immediately
- */
-/**
  * Custom React hook that returns the current window size (width and height).
  * It updates the state only if the window size changes by at least the specified step value.
  *

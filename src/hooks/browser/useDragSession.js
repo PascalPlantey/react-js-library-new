@@ -54,8 +54,9 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
   const toggleListeners = () => {
     togglePointerMove();
     togglePointerUp();
-  }
+  };
 
+  // Builds the parameter which will be sent to the callbacks
   const paramValue = event => {
     let delta;
     const to = getEventClientXY(event);
@@ -68,6 +69,7 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
     return { event, from: startFromRef.current, to, delta, elt: refElt.current };
   };
 
+  // PointerDown received, start drag session if not excluded
   function handleDragStart(event) {
     const shouldStart = !excludeListRef.current.some(sel => event.target.closest(sel));
 
@@ -80,6 +82,7 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
     onStartFnRef.current(paramValue(event));
   }
 
+  // PointerMove received, forward event if dragging
   function handleDragMove(event) {
     if (!isDraggingRef.current) return;
     event.stopPropagation();
@@ -87,6 +90,7 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
     onMoveFnRef.current(paramValue(event));
   }
 
+  // PointerUp received, end drag session
   function handleDragEnd(event) {
     if (!isDraggingRef.current) return;
     event.stopPropagation();
