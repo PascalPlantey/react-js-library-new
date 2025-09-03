@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
 import useBoolean from '../utils/useBoolean';
@@ -114,6 +115,9 @@ const decryptData = async (encryptedData, password) => {
  * 
  * @remarks
  * This hook requires Capacitor's Filesystem API to read and write files (`@capacitor/filesystem`)
+ * 
+ * @maintenance
+ * 03/09/2025: switched from Directory.Documents to Directory.Data to avoid permission issues
  */
 const useSharedStorage = (fileName, defaultValue, encryptionKey) => {
   const [value, setValue] = useState(defaultValue);
@@ -125,7 +129,7 @@ const useSharedStorage = (fileName, defaultValue, encryptionKey) => {
     await Filesystem.writeFile({
       path: fileName,
       data: encryptedData,
-      directory: Directory.Documents,
+      directory: Directory.Data,
       encoding: Encoding.UTF8
     });
   }, [fileName, encryptionKey]);
@@ -135,7 +139,7 @@ const useSharedStorage = (fileName, defaultValue, encryptionKey) => {
       try {
         const file = await Filesystem.readFile({
           path: fileName,
-          directory: Directory.Documents,
+          directory: Directory.Data,
           encoding: Encoding.UTF8
         });
         const decryptedData = encryptionKey ? await decryptData(file.data, encryptionKey) : JSON.parse(file.data);
