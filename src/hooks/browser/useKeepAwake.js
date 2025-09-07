@@ -17,7 +17,7 @@ const useKeepAwake = (initiallyActive = true) => {
   const [isActive, setIsActive] = useState(false);
   const capacitorAvailable = isCapacitorAvailable();
 
-  const activate = useCallback(() => {
+  const keepAwake = useCallback(() => {
     if (!capacitorAvailable) return;
 
     setIsActive(prev => {
@@ -27,7 +27,7 @@ const useKeepAwake = (initiallyActive = true) => {
 
   }, [capacitorAvailable]);
 
-  const deactivate = useCallback(() => {
+  const allowSleep = useCallback(() => {
     if (!capacitorAvailable) return;
 
     setIsActive(prev => {
@@ -41,15 +41,15 @@ const useKeepAwake = (initiallyActive = true) => {
   useEffect(() => {
     if (!capacitorAvailable) return;
 
-    if (initiallyActive) activate();
+    if (initiallyActive) keepAwake();
 
-    return () => deactivate();
-  }, [capacitorAvailable, initiallyActive, activate, deactivate]);
+    return () => allowSleep();
+  }, [capacitorAvailable, initiallyActive, keepAwake, allowSleep]);
 
   return {
-    isActive: capacitorAvailable ? isActive : false,
-    activate,
-    deactivate,
+    isKeepAwake: capacitorAvailable ? isActive : false,
+    keepAwake,
+    allowSleep,
   };
 };
 
