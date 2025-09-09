@@ -8,18 +8,17 @@ import isFunction from "../../tools/is/isFunction";
  * Returns a stable callback function that always invokes the latest version of the provided function.
  *
  * @param {Function} fn - The function to be stabilized.
- * @returns {Function} A memoized callback that calls the latest version of `fn`.
+ * @returns {Function} A memoized stable callback that calls the latest version of `fn`
  *
- * @throws {void} Logs an error if the provided argument is not a function.
+ * @console {void} Logs an error if the provided argument is not a function.
  *
  * @example
  * const stableCallback = useStableFunction((value) => console.log(value));
  */
 const useStableFunction = fn => {
-  const fnRef = useLast(fn);
+  console.assert(isFunction(fn), 'useStableFunction: The provided argument is not a function.');
 
-  if (!isFunction(fn))
-    console.error('useStableFunction: The provided argument is not a function.');
+  const fnRef = useLast(fn);
 
   return useCallback((...args) => fnRef.current(...args), []);
 };

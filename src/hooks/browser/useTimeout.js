@@ -1,8 +1,6 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import useLast from "../react/useLast";
-import useOnMount from "../react/useOnMount";
-import useOnDismount from "../react/useOnDismount";
 
 import isFunction from "../../tools/is/isFunction";
 
@@ -26,8 +24,9 @@ import isFunction from "../../tools/is/isFunction";
  * const timer = useTimeout(() => console.log('Auto!'), 1000, true);
  */
 const useTimeout = (actionFn, delay = 3000, now = false) => {
+  console.assert(isFunction(actionFn), 'useTimeout: The provided actionFn is not a function.');
   const timeoutRef = useRef(null);
-  const fn = useLast(actionFn);
+  const fnRef = useLast(actionFn);
 
   const clearTimeoutHandler = useCallback(() => {
     if (timeoutRef.current) {
@@ -37,18 +36,18 @@ const useTimeout = (actionFn, delay = 3000, now = false) => {
   }, []);
 
   const startTimeout = useCallback(during => {
-    const action = fn.current;
-    clearTimeoutHandler();
+    clearTimeoutHandler();                                      // Clear any existing timeout
 
-    timeoutRef.current = setTimeout(() => {
-      if (isFunction(action)) action();
-      else                    console.warn("useTimeout: actionFn is not a function", typeof action);
-    }, during || delay);
+    const action = fnRef.current;
+    timeoutRef.current = setTimeout(action, during ?? delay);   // Execute action after specified delay
 
-  }, [fn, clearTimeoutHandler, delay]);
+  }, [fnRef, clearTimeoutHandler, delay]);
 
-  useOnMount(() => now && startTimeout());
-  useOnDismount(clearTimeoutHandler);
+  // Auto-start if requested and cleanup on unmount
+  useEffect(() => {
+    if (now) startTimeout();
+    return clearTimeoutHandler;                                 // Cleanup on unmount
+  }, [now, startTimeout, clearTimeoutHandler]);
 
   return { startTimeout, clearTimeout: clearTimeoutHandler };
 };

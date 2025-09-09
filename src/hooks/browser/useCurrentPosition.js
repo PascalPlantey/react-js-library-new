@@ -47,7 +47,7 @@ const useCurrentPosition = (options = { enableHighAccuracy: true, timeout: 5000,
         setError(null);                                       // Clear any previous errors
       };
 
-      // Première position rapide
+      // Try to quickly get the current position first
       navigator.geolocation.getCurrentPosition(
         handlePositionChange,                                 // Callback to handle the initial position
         handleError,                                          // Error callback to handle geolocation errors

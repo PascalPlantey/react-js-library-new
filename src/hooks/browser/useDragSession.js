@@ -36,24 +36,24 @@ const useDragSession = (elt, exclude, onStart = noop, onMove = noop, onEnd = noo
         onEndFnRef = useLast(onEnd);
   const startFromRef = useRef({});                          // During a drag session holds the initial position
 
-  const { toggle : togglePointerUp }    = useEventListener("pointerup", handleDragEnd, refElt, false);
-  const { toggle : togglePointerMove }  = useEventListener("pointermove", handleDragMove, refElt, false);
-  const { toggle : togglePointerDown }  = useEventListener("pointerdown", handleDragStart, refElt, false);
+  const { toggle : toggleListenPointerUp }    = useEventListener("pointerup", handleDragEnd, refElt, false);
+  const { toggle : toggleListenPointerMove }  = useEventListener("pointermove", handleDragMove, refElt, false);
+  const { toggle : toggleListenPointerDown }  = useEventListener("pointerdown", handleDragStart, refElt, false);
 
   useOnMount(() => {
     if (refElt.current === undefined) {
       refElt.current = getEventTarget(elt);
 
       if (refElt.current !== undefined)                     // We can start listening to drag start events
-        togglePointerDown();
+        toggleListenPointerDown();
       else
         console.warn("useDragSession: the target element is not defined or not found :", elt);
     }
   });
 
   const toggleListeners = () => {
-    togglePointerMove();
-    togglePointerUp();
+    toggleListenPointerMove();
+    toggleListenPointerUp();
   };
 
   // Builds the parameter which will be sent to the callbacks

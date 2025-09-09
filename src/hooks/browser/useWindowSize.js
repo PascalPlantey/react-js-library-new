@@ -17,10 +17,11 @@ const useWindowSize = (step = 30, immediately = true) => {
   };
 
   const [size, setSize] = useState(makeSize);
-  const { height, width } = size;
 
   const onResize = () => setSize(current => {
     const { height, width } = current;
+
+    // Update state only if the size has changed by at least 'step' pixels
     if (Math.abs(window.innerWidth - width) >= step || Math.abs(window.innerHeight - height) >= step)
       return makeSize();
     else
@@ -29,7 +30,7 @@ const useWindowSize = (step = 30, immediately = true) => {
 
   useEventListener('resize', onResize, window, immediately);
 
-  return ({ height, width });
+  return ({ height: size.height, width: size.width });
 };
 
 export default useWindowSize;

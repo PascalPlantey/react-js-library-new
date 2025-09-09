@@ -15,14 +15,13 @@ import isFunction from '../../tools/is/isFunction';
  * src\hooks\react\useOnMount(() => console.log('callback'));
  */
 const useOnMount = fn => {
+  console.assert(isFunction(fn), 'useOnMount: The provided argument is not a function.');
+
   const fnRef = useLast(fn);
   const resultRef = useRef();
 
   useEffect(() => {
-    if (!isFunction(fnRef.current))
-      console.warn('useOnMount: Expected a function, got:', typeof fnRef.current);
-    else
-      resultRef.current = fnRef.current();
+    resultRef.current = fnRef.current();
   }, [fnRef]);
 
   return resultRef.current;

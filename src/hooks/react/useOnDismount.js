@@ -11,21 +11,15 @@ import isFunction from '../../tools/is/isFunction';
  * @returns {*} - The return value of the callback function (stable, will not change)
  */
 const useOnDismount = fn => {
+  console.assert(isFunction(fn), 'useOnDismount: The provided argument is not a function.');
+
   const fnRef = useLast(fn);  // Stable ref that always points to latest fn
   const resultRef = useRef();
 
   useEffect(() => {
     const fn = fnRef.current;
-    if (!isFunction(fn))
-      console.warn("useOnDismount: Provided callback is not a function:", typeof fn);
-    else
-      return () => {
-        try {
-          resultRef.current = fn();
-        } catch (error) {
-          console.error("useOnDismount: exception while running provided function", error);
-        }
-      };
+
+    return () => resultRef.current = fn();
   }, [fnRef]);                // Effect runs once, fnRef is stable and does not change
 
   return resultRef.current;
