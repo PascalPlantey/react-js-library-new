@@ -1,3 +1,4 @@
+export * from './BTree.js';
 export { default as CSSVariable } from './CSSVariable.js';
 export { default as Enum } from "./Enum";
 export * from "./EventEmitter";
@@ -11,6 +12,7 @@ export { default as ExtString } from "./ExtString";
 export { default as GeoCoordinates } from "./GeoCoordinates";
 export { default as CurrentGpsPosition } from "./CurrentGpsPosition.js";  // Must be imported after GeoCoordinates & EventEmitterMixin
 export { default as ItemsCounter } from "./ItemsCounter";
+export * from "./LinkedList";
 export { default as MapOfSet } from "./MapOfSet";
 export { default as PropertyValues } from "./PropertyValues";
 export { default as Stats } from "./Stats";

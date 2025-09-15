@@ -1,10 +1,12 @@
 import { useRef } from "react";
 
+import isEqual from 'lodash.isequal';
+
 /**
  * Hook that provides a way to check if dependencies have changed, useful for development time
  *
  * @param {...any} deps - Dependencies to check for changes
- * @returns {[boolean : changed, [{index: number, previous: any, current: any}]]}
+ * @returns {[boolean : changed, [{ index: number, previous: any, current: any, cause: string }]]}
  * - Returns an array where the first element is a boolean indicating if any dependencies changed,
  *   and the second element is an array of objects describing the changes.
  *
@@ -19,8 +21,14 @@ const useCheckDepsChanges = (...deps) => {
 
   const changes = [];
   deps.forEach((dep, index) => {
-    if (dep !== previousDepsRef.current[index])
-      changes.push({ index, previous: previousDepsRef.current[index], current: dep });
+    if (dep !== previousDepsRef.current[index]) {
+      const change = { index, previous: previousDepsRef.current[index], current: dep };
+
+      if (!isEqual(change.previous, change.current))
+        changes.push({ ...change, cause: 'value content has been modified' });
+      else
+        changes.push({ ...change, cause: 'reference has changed' });
+    }
   });
 
   if (changes.length > 0)

@@ -5,6 +5,8 @@ import { Network } from "@capacitor/network";
 import useOnMount from "../react/useOnMount";
 import useBoolean from "./useBoolean";
 
+import isCapacitorAvailable from "../../tools/browser/isCapacitorAvailable";
+
 /**
  * Custom React hook to track the network connectivity status.
  *
@@ -16,15 +18,29 @@ import useBoolean from "./useBoolean";
 const useNetworkStatus = () => {
   const { value: online, setValue: setOnline } = useBoolean(false);
 
-  useOnMount(() =>
-    Network.getStatus().then(({ connected }) => setOnline(connected))
-  );
-
   useEffect(() => {
-    const handler =
-      Network.addListener('networkStatusChange', ({ connected }) => setOnline(connected));
+    if (isCapacitorAvailable()) {
+      // Initial status check, then subscribe to changes
+      Network.getStatus().then(({ connected }) => setOnline(connected));
 
-    return () => handler.remove();
+      const handler = Network.addListener('networkStatusChange', ({ connected }) => setOnline(connected));
+
+      return () => handler.remove();
+    }
+    else {
+      // Fallback for non-Capacitor environments (e.g., web browsers)
+      setOnline(navigator.onLine);
+
+      const updateOnlineStatus = () => setOnline(navigator.onLine);
+
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+
+      return () => {
+        window.removeEventListener('online', updateOnlineStatus);
+        window.removeEventListener('offline', updateOnlineStatus);
+      };
+    }
   }, [setOnline]);
 
   return online;

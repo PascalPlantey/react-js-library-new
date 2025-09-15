@@ -14,14 +14,11 @@ import isFunction from "../../tools/is/isFunction";
  * const ref = useNewClassRef(() => new ExtMap());
  */
 const useNewClassRef = func => {
+  console.assert(isFunction(func), "useNewClassRef, requires a function that returns a new object got:", typeof func);
   const ref = useRef();
 
-  if (!ref.current) {
-    if (!isFunction(func))
-      console.warn("useNewClassRef, requires a function that returns a new object got:", typeof func);
-
+  if (!ref.current)
     ref.current = func();
-  }
 
   return ref.current;
 };

@@ -16,9 +16,9 @@ import isFunction from "../../tools/is/isFunction";
  * });
  */
 const useBeforeMount = callback => {
+  console.assert(isFunction(callback), "useBeforeMount: callback must be a function");
   const fnRef = useLast(callback);
   const resultRef = useRef();
-  console.assert(isFunction(callback), "useBeforeMount: callback must be a function");
 
   useLayoutEffect(() => {
     resultRef.current = fnRef.current();
