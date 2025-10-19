@@ -9,6 +9,7 @@ export { default as CompoundMap } from './CompoundMap.js';                // Mus
 export { default as ExtMath } from "./ExtMath";
 export { default as ExtSet } from "./ExtSet";
 export { default as ExtString } from "./ExtString";
+export { default as ExtURLSearchParams } from "./ExtURLSearchParams.js";
 export { default as GeoCoordinates } from "./GeoCoordinates";
 export { default as CurrentGpsPosition } from "./CurrentGpsPosition.js";  // Must be imported after GeoCoordinates & EventEmitterMixin
 export { default as ItemsCounter } from "./ItemsCounter";

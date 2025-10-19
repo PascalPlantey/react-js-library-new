@@ -20,5 +20,8 @@ export default useSharedStorage;
  *
  * @remarks
  * This hook requires Capacitor's Filesystem API to read and write files (`@capacitor/filesystem`)
+ *
+ * @maintenance
+ * 03/09/2025: switched from Directory.Documents to Directory.Data to avoid permission issues
  */
 declare function useSharedStorage(fileName: string, defaultValue: any, encryptionKey?: string): [any, (arg0: any) => Promise<void>, boolean];

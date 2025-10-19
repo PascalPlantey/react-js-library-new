@@ -8,7 +8,7 @@ export default useFetch;
  * @param {number} [debounce=0] Debounce delay in ms (0 = pas de debounce)
  * @returns {[Object, Function, Function]} Tuple containing:
  * - Fetch result object with properties: loading, ok, status, statusText, data, error
- * - Function to toggle the fetch state
+ * - Function to toggle the fetch state (re-fetch)
  * - Function to abort the fetch request
  *
  * @example

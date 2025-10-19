@@ -1,34 +1,4 @@
 export default useWindowSize;
-export type WindowSize = {
-    /**
-     * - Window width in pixels
-     */
-    width: number;
-    /**
-     * - Window height in pixels
-     */
-    height: number;
-};
-export type UseWindowSizeOptions = {
-    /**
-     * - Minimum resize pixels to trigger update
-     */
-    step?: number;
-    /**
-     * - Start listening immediately
-     */
-    immediately?: boolean;
-};
-/**
- * @typedef {Object} WindowSize
- * @property {number} width - Window width in pixels
- * @property {number} height - Window height in pixels
- */
-/**
- * @typedef {Object} UseWindowSizeOptions
- * @property {number} [step=30] - Minimum resize pixels to trigger update
- * @property {boolean} [immediately=true] - Start listening immediately
- */
 /**
  * Custom React hook that returns the current window size (width and height).
  * It updates the state only if the window size changes by at least the specified step value.

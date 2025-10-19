@@ -28,10 +28,10 @@
   "scripts": {
     "dev": "vite",
     "dev:lib": "nodemon --watch src --ext js,jsx --exec \"npm run build\"",
-    "build": "vite build && npm link",
+    "build": "tsc && vite build",
     "tgz": "npm run build && npm pack",
     "dev:tgz": "nodemon --watch src --ext js,jsx --exec \"npm run tgz\"",
-    "push": "rimraf dist && tsc && vite build && npm link",
+    "push": "rimraf dist && tsc && vite build",
     "preview": "vite preview",
     "build:types": "tsc"
   },

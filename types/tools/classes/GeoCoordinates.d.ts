@@ -2,7 +2,7 @@ export default GeoCoordinates;
 declare class GeoCoordinates {
     static fromObject(obj: any): GeoCoordinates;
     static fromString(str: any): GeoCoordinates;
-    static isValid(obj: any): boolean;
+    static isValid(obj: any): any;
     constructor(...args: any[]);
     from(...args: any[]): void;
     clone(): GeoCoordinates;

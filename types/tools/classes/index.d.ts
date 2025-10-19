@@ -1,6 +1,8 @@
+export * from "./BTree.js";
+export * from "./EventEmitter";
+export * from "./LinkedList";
 export { default as CSSVariable } from "./CSSVariable.js";
 export { default as Enum } from "./Enum";
-export * from "./EventEmitter";
 export { default as ExtArray } from "./ExtArray";
 export { default as ExtMap } from "./ExtMap";
 export { default as Compound } from "./Compound.js";
@@ -8,6 +10,7 @@ export { default as CompoundMap } from "./CompoundMap.js";
 export { default as ExtMath } from "./ExtMath";
 export { default as ExtSet } from "./ExtSet";
 export { default as ExtString } from "./ExtString";
+export { default as ExtURLSearchParams } from "./ExtURLSearchParams.js";
 export { default as GeoCoordinates } from "./GeoCoordinates";
 export { default as CurrentGpsPosition } from "./CurrentGpsPosition.js";
 export { default as ItemsCounter } from "./ItemsCounter";
