@@ -27,9 +27,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "dev:lib": "nodemon --watch src --ext js,jsx --exec \"npm run build\"",
+    "dev:lib": "vite build --watch",
     "build": "tsc && vite build",
-    "tgz": "npm run build && npm pack",
+    "tgz": "npm run build && npm pack && cp react-js-library-new-*.tgz ../packs/",
     "dev:tgz": "nodemon --watch src --ext js,jsx --exec \"npm run tgz\"",
     "push": "rimraf dist && tsc && vite build",
     "preview": "vite preview",
