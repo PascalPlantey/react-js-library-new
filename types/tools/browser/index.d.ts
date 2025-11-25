@@ -1,5 +1,6 @@
 export { default as debouncedFetch } from "./debouncedFetch.js";
 export { default as detectCordovaCompassCapability } from "./detectCordovaCompassCapability.js";
+export { default as disableAnimation } from "./disableAnimation.js";
 export { default as getElementPosition } from "./getElementPosition.js";
 export { default as getEventClientX } from "./getEventClientX.js";
 export { default as getEventClientXY } from "./getEventClientXY.js";

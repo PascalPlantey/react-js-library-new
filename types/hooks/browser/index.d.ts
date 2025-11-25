@@ -8,6 +8,7 @@ export { default as useEventListener } from "./useEventListener.js";
 export { default as useFetch } from "./useFetch.js";
 export { default as useGpsCoordinates } from "./useGpsCoordinates.js";
 export { default as useKeepAwake } from "./useKeepAwake.js";
+export { default as useOnClickOutside } from "./useOnClickOutside.js";
 export { default as useSharedStorage } from "./useSharedStorage.js";
 export { default as useStorageItem } from "./useStorageItem.js";
 export { default as useStorageObject } from "./useStorageObject.js";
