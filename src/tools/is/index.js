@@ -10,3 +10,4 @@ export { default as isProperty } from './isProperty';
 export { default as isReactElement } from './isReactElement';
 export { default as isReactRef } from './isReactRef';
 export { default as isString } from './isString';
+export { default as isTouchDevice } from './isTouchDevice';
