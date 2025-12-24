@@ -19,7 +19,7 @@ export default defineConfig({
     },
     cssCodeSplit: false,
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'react-router-dom'],
       output: {
         format: 'es',
         entryFileNames: '[name].js'
@@ -27,12 +27,3 @@ export default defineConfig({
     }
   }
 })
-
-
-
-
-
-
-
-
-

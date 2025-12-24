@@ -6,4 +6,5 @@ export { default as useDebounceValue } from "./useDebounceValue.js";
 export { default as useNetworkStatus } from "./useNetworkStatus.js";
 export { default as useNewClassRef } from "./useNewClassRef.js";
 export { default as useObject } from "./useObject.js";
+export { default as useRecordEdit } from "./useRecordEdit.js";
 export { default as useWebWorker } from "./useWebWorker.js";

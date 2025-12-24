@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { normalizeForSqlComparison } from "react-js-library-new/tools";
+import { normalizeForSqlComparison } from "./../../tools/misc/normalizeSql.js";
 
 /**
  * Custom React hook for managing the editing state of a record.
