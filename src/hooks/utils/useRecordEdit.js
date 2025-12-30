@@ -24,28 +24,26 @@ import { normalizeForSqlComparison } from "./../../tools/misc/normalizeSql.js";
  * Warning: after saving, the hasChanged flag will remain false until the initialRecord prop changes.
  */
 const useRecordEdit = initialRecord => {
-  const [editRecord, setEditRecord] = useState(initialRecord);
+  const [editRecord, setEditRecord] = useState(() => structuredClone(initialRecord));
   const [hasBeenSaved, setHasBeenSaved] = useState(false);
 
   useEffect(() => {
-    setEditRecord(initialRecord);
+    setEditRecord(structuredClone(initialRecord));
     setHasBeenSaved(false);
   }, [initialRecord]);
 
-  const handleChange = useCallback((name, value) => {
+  const handleChange = useCallback((name, value) =>
     setEditRecord(prev => (
       prev[name] === value
         ? prev
         : { ...prev, [name]: value }
-    ));
-  }, []);
+    ))
+  , []);
 
-  const onHasBeenSaved = useCallback(() => {
-    setHasBeenSaved(true);
-  }, []);
+  const onHasBeenSaved = useCallback(() =>setHasBeenSaved(true), []);
 
-  // SQL normalization: convert empty strings to null for comparison
-  const normalizedRecord = normalizeForSqlComparison(editRecord);
+  // SQL normalization: convert empty strings to null for comparison: empty object if no record
+  const normalizedRecord = normalizeForSqlComparison(editRecord || {});
   const hasChanged = hasBeenSaved
     ? false
     : JSON.stringify(initialRecord) !== JSON.stringify(normalizedRecord);

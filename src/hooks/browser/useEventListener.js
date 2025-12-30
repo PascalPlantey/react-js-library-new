@@ -20,18 +20,18 @@ import getEventTarget from '../../tools/browser/getEventTarget';
  *  . 28/12/2023: changed useOnmount by useEffect to restart listening when listener (startListener) changes
  *  . 29/12/2023: make sure stopListener is called on startListener changes & clear the AbortController in stopListener
  *  . 09/01/2024: updated some dependencies and checking that fn is a Function
- *  . 21/06/2025: added a refFn to always the latest fn reference avoiding useEffect/useCallback dependencies issues
+ *  . 21/06/2025: added a fnRef to always the latest fn reference avoiding useEffect/useCallback dependencies issues
+ *  . 30/12/2025: useLast for elt to avoid unnecessary restarts when elt is stable
  */
 const useEventListener = (name, fn, elt = window, immediately = true, options = {}) => {
   const [working, setWorking] = useState(!!immediately);
   const { capture, once, passive } = options;
-  const refAbort = useRef(undefined),
-        refElt = useRef(undefined);
-  const element = getEventTarget(elt);
+  const refAbort = useRef(undefined);
+  const refElt = useLast(getEventTarget(elt));
+  const element = refElt.current;
+  const fnRef = useLast(fn);                                        // Always keep the latest fn reference
 
   console.assert(isFunction(fn), `useEventListener: fn is not a function: ${fn}`);
-
-  const fnRef = useLast(fn);                                        // Always keep the latest fn reference
 
   /**
    * Stops the event listener by aborting the current AbortController instance.
@@ -39,6 +39,7 @@ const useEventListener = (name, fn, elt = window, immediately = true, options = 
    */
   const stopListener = useCallback(() => {
     if (refAbort.current) {
+      // console.log('stopping event listener for', name);
       refAbort.current.abort();
       refAbort.current = undefined;
     }
@@ -55,18 +56,18 @@ const useEventListener = (name, fn, elt = window, immediately = true, options = 
       }
     };
 
-    if (refElt?.current) {
+    if (refElt.current) {
       stopListener();                                               // Stop listening if it already started
       refAbort.current = new AbortController();                     // Restart with a a new AbortController for this listener
+      // console.log('starting event listener for', name);
       refElt.current?.addEventListener(name, listener, { capture, once, passive, signal: refAbort.current.signal });
     }
   }, [capture, once, passive, name, stopListener]);
 
   useEffect(() => {                                                 // (Re)Start listener when it changes
-    if (working && element) {
-      refElt.current = element;                                     // Update element ref
+    if (working)
       startListener();
-    }
+
     return stopListener;                                            // Cleanup listener when component unmounts or when startListener changes
   }, [working, element, startListener, stopListener]);
 
