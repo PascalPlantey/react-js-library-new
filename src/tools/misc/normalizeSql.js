@@ -14,12 +14,19 @@ export const normalizeToSql = record =>
   );
 
 /**
- * Normalizes an object's values for SQL comparison by converting empty string values to null.
+ * Normalizes two objects for SQL comparison by:
+ * - Converting empty string values to null.
+ * - Removing keys from editRecord whose value is '' or null AND are also ''/null/undefined in initialRecord.
  *
- * @param {Object} record - The input object whose values will be normalized.
- * @returns {Object} A new object with empty string values replaced by null, all other values unchanged.
+ * @param {Object} editRecord - The edited record object.
+ * @param {Object} initialRecord - The initial record object.
+ * @returns {Object} A new object ready for comparison.
  */
-export const normalizeForSqlComparison = record =>
-  Object.fromEntries(
-    Object.entries(record).map(([key, value]) => [key, value === '' ? null : value])
-  );
+export const normalizeForSqlComparison = (editRecord, initialRecord = {}) => {
+  const result = {};
+  for (const [key, value] of Object.entries(editRecord)) {
+    if (!(key in initialRecord)) continue;
+    result[key] = value === '' ? null : value;
+  }
+  return result;
+};
