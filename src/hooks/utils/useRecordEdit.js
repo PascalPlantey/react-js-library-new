@@ -44,6 +44,7 @@ const useRecordEdit = (initialRecord = {}) => {
 
   // SQL normalization: convert empty strings to null for comparison: empty object if no record
   const normalizedRecord = normalizeForSqlComparison(editRecord || {}, initialRecord);
+
   const hasChanged = hasBeenSaved
     ? false
     : JSON.stringify(initialRecord) !== JSON.stringify(normalizedRecord);

@@ -24,9 +24,11 @@ export const normalizeToSql = record =>
  */
 export const normalizeForSqlComparison = (editRecord, initialRecord = {}) => {
   const result = {};
+
   for (const [key, value] of Object.entries(editRecord)) {
-    if (!(key in initialRecord)) continue;
+    if (!(key in initialRecord) && (value === '' || value === null)) continue;
     result[key] = value === '' ? null : value;
   }
+
   return result;
 };
