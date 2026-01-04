@@ -1,9 +1,9 @@
 import { useCallback, useRef } from "react";
 
-import noop from './../../tools/misc/noop.js';
+import noop from '../../tools/misc/noop.js';
 import useEventListener from "./useEventListener.js";
-import debounceImmediate from './../../tools/misc/debounceImmediate.js';
-import useLast from "./../react/useLast.js";
+import debounceImmediate from '../../tools/misc/debounceImmediate.js';
+import useLast from "../react/useLast.js";
 
 /**
  * Custom React hook to handle double-click events on a referenced element. Useful for
@@ -17,7 +17,7 @@ import useLast from "./../react/useLast.js";
  * @param {Function} [onDblClick=noop] - Callback function to execute on double-click.
  * @param {number} [timeout=300] - Time window in milliseconds to detect two rapid clicks as a double-click.
  */
-const useDoubleClick = (ref, onDblClick = noop, timeout = 300) => {
+const useOnDoubleClick = (ref, onDblClick = noop, timeout = 300) => {
   const clickCountRef = useRef(0);                // Count of quick clicks on mobile
   const onDblClickRef = useLast(onDblClick);      // Latest onDblClick callback
   const debouncedDblClickRef = useRef(debounceImmediate(() => onDblClickRef.current()));
@@ -42,4 +42,4 @@ const useDoubleClick = (ref, onDblClick = noop, timeout = 300) => {
   });
 };
 
-export default useDoubleClick;
+export default useOnDoubleClick;
