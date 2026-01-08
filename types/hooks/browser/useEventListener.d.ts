@@ -14,6 +14,7 @@ export default useEventListener;
  *  . 28/12/2023: changed useOnmount by useEffect to restart listening when listener (startListener) changes
  *  . 29/12/2023: make sure stopListener is called on startListener changes & clear the AbortController in stopListener
  *  . 09/01/2024: updated some dependencies and checking that fn is a Function
- *  . 21/06/2025: added a refFn to always the latest fn reference avoiding useEffect/useCallback dependencies issues
+ *  . 21/06/2025: added a fnRef to always the latest fn reference avoiding useEffect/useCallback dependencies issues
+ *  . 30/12/2025: useLast for elt to avoid unnecessary restarts when elt is stable
  */
 declare function useEventListener(name: string, fn: (event: Event) => any, elt?: Element | Window | Document | null, immediately?: boolean, options?: object): object;
