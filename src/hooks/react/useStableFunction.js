@@ -20,7 +20,7 @@ const useStableFunction = fn => {
 
   const fnRef = useLast(fn);
 
-  return useCallback((...args) => fnRef.current(...args), []);
+  return useCallback((...args) => fnRef.current(...args), [fnRef]);
 };
 
 export default useStableFunction;
