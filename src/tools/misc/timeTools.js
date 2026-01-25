@@ -1,7 +1,7 @@
 /**
- * Converts a time value to a Date object.
+ * Converts a time Object to a Date object.
  * @param {Date|string|number} time - The time to convert. Can be a Date object, a date string, or a timestamp number.
- * @returns {Date} A Date object representing the provided time.
+ * @returns {Object} A Date object representing the provided time.
  * @throws {Error} Throws an error if the provided time cannot be converted to a valid date.
  */
 export const toDate = time => {
@@ -9,6 +9,66 @@ export const toDate = time => {
   if (isNaN(date))
     throw new Error('Invalid date format');
   return date;
+};
+/**
+ * Validates that a Date object matches the expected year, month, and day values.
+ * Rejects dates corrected by JavaScript (e.g., 31/11 becomes 1/12).
+ * 
+ * @private
+ */
+
+/**
+ * Parses a locale date string (e.g., '31/10/2026' for fr-FR) into a Date object.
+ * Supports common formats: DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD
+ *
+ * @param {string|null|undefined} dateString - The date string to parse (e.g., '31/10/2026')
+ * @param {string} [locale='fr-FR'] - The locale to determine the date format
+ * @returns {Date|null|undefined} Returns:
+ *   - Date object if valid
+ *   - null if dateString is null/undefined (no value provided)
+ *   - undefined if parsing fails (invalid date)
+ */
+export const parseLocaleDate = (dateString, locale = 'fr-FR') => {
+  const isValidDateComponents = (date, year, month, day) => 
+      !isNaN(date) &&
+      date.getFullYear() === parseInt(year) &&
+      date.getMonth() === parseInt(month) - 1 &&
+      date.getDate() === parseInt(day);
+
+  // null/undefined is valid (no value), return as-is
+  if (dateString === null || dateString === undefined) return dateString;
+
+  // Non-string is an error
+  if (typeof dateString !== 'string') return undefined;
+  // Empty string means no date, return null
+  if (dateString.trim().length === 0) return null;
+
+  const trimmed = dateString.trim();
+
+  // Format: DD/MM/YYYY or MM/DD/YYYY
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(trimmed)) {
+    const parts = trimmed.split('/');
+    let day, month, year;
+
+    if (locale.startsWith('fr') || locale.startsWith('de') || locale.startsWith('it'))
+      [day, month, year] = parts; // FR/DE/IT format: DD/MM/YYYY
+    else
+      [month, day, year] = parts; // US/EN format: MM/DD/YYYY
+
+    const date = new Date(year, parseInt(month) - 1, day);
+    return isValidDateComponents(date, year, month, day) ? date : undefined;
+  }
+
+  // Format: YYYY-MM-DD
+  if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(trimmed)) {
+    const parts = trimmed.split('-');
+    const [year, month, day] = parts;
+    const date = new Date(trimmed);
+    return isValidDateComponents(date, year, month, day) ? date : undefined;
+  }
+
+  // No format matched - parsing error
+  return undefined;
 };
 
 /**
@@ -58,53 +118,51 @@ export const getWeekNumber = (date = new Date()) => {
  * timeDifference('2022-10-15', '2024-01-01', true);
  */
 export const timeDifference = (time1, time2, full = false) => {
-  const start = toDate(time1);
-  const end   = toDate(time2);
-  const diffInMs = Math.abs(end - start);
+  const start = toDate(time1), end = toDate(time2);
 
-  const diffInSeconds = Math.floor(diffInMs / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-  const diffInMonths = Math.floor(diffInDays / 30);
-  const diffInYears = Math.floor(diffInMonths / 12);
+  // Always go from earlier to later
+  const [from, to] = start < end ? [start, end] : [end, start];
+
+  let years = to.getFullYear() - from.getFullYear();
+  let months = to.getMonth() - from.getMonth();
+  let days = to.getDate() - from.getDate();
+  let hours = to.getHours() - from.getHours();
+  let minutes = to.getMinutes() - from.getMinutes();
+  let seconds = to.getSeconds() - from.getSeconds();
+
+  if (seconds < 0) {
+    seconds += 60;
+    minutes--;
+  }
+  if (minutes < 0) {
+    minutes += 60;
+    hours--;
+  }
+  if (hours < 0) {
+    hours += 24;
+    days--;
+  }
+  if (days < 0) {
+    // Get days in previous month
+    const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+    days += prevMonth.getDate();
+    months--;
+  }
+  if (months < 0) {
+    months += 12;
+    years--;
+  }
 
   if (full)
-    return {
-      years: diffInYears,
-      months: diffInMonths % 12,
-      days: diffInDays % 30,
-      hours: diffInHours % 24,
-      minutes: diffInMinutes % 60,
-      seconds: diffInSeconds % 60,
-    };
-
-  if (diffInYears > 0)
-    return {
-      years: diffInYears,
-      months: diffInMonths % 12,
-      days: diffInDays % 30,
-    };
-
-  if (diffInMonths > 0)
-    return {
-      months: diffInMonths,
-      days: diffInDays % 30,
-      hours: diffInHours % 24,
-    };
-
-  if (diffInDays > 0)
-    return {
-      days: diffInDays,
-      hours: diffInHours % 24,
-      minutes: diffInMinutes % 60,
-    };
-
-  return {
-    hours: diffInHours % 24,
-    minutes: diffInMinutes % 60,
-    seconds: diffInSeconds % 60,
-  };
+    return { years, months, days, hours, minutes, seconds };
+  else if (years > 0)
+    return { years, months, days };
+  else if (months > 0)
+    return { months, days, hours };
+  else if (days > 0)
+    return { days, hours, minutes };
+  else
+    return { hours, minutes, seconds };
 };
 
 /**
@@ -132,4 +190,15 @@ export const calculateDuration = (startDate, endDate) => {
   if (parts.length === 2) return parts.join(" et ");
 
   return parts.slice(0, -1).join(", ") + " et " + parts[parts.length - 1];
+};
+
+/**
+ * Returns the number of days in a given month and year.
+ *
+ * @param {number} year - The year (e.g., 2024).
+ * @param {number} month - The month (0-based, where 0 = January, 11 = December).
+ * @returns {number} The number of days in the specified month.
+ */
+export const daysInMonth = (year, month) => {
+  return new Date(year, month + 1, 0).getDate();
 };

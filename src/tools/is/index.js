@@ -1,5 +1,6 @@
 export { default as isArray } from './isArray';
 export { default as isBoolean } from './isBoolean';
+export { default as isDate } from './isDate';
 export { default as isFunction } from './isFunction';
 export { default as isInteger } from './isInteger';
 export { default as isIterable } from './isIterable';

@@ -32,7 +32,7 @@ const useRecordEdit = (initialRecord = {}) => {
     setHasBeenSaved(false);
   }, [initialRecord]);
 
-  const handleChange = useCallback((name, value) =>
+  const handleChange = useCallback((name, value) => 
     setEditRecord(prev => (
       prev[name] === value
         ? prev

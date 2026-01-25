@@ -4,6 +4,7 @@ export { default as googleMapsLink } from "./googleMapsLink.js";
 export { default as initials } from "./initials.js";
 export { default as noop } from "./noop.js";
 export * from "./normalizeSql.js";
+export { default as parseLocaleDate } from "./parseLocaleDate.js";
 export { default as resolve } from "./resolve.js";
 export { default as toArray } from "./toArray.js";
 export { default as toIterable } from "./toIterable.js";
