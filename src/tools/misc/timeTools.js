@@ -46,7 +46,7 @@ export const parseLocaleDate = (dateString, locale = 'fr-FR') => {
   const trimmed = dateString.trim();
 
   // Format: DD/MM/YYYY or MM/DD/YYYY
-  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(trimmed)) {
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(trimmed)) {
     const parts = trimmed.split('/');
     let day, month, year;
 
@@ -60,15 +60,25 @@ export const parseLocaleDate = (dateString, locale = 'fr-FR') => {
   }
 
   // Format: YYYY-MM-DD
-  if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(trimmed)) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
     const parts = trimmed.split('-');
     const [year, month, day] = parts;
-    const date = new Date(trimmed);
+    const date = new Date(year, parseInt(month) - 1, day);
     return isValidDateComponents(date, year, month, day) ? date : undefined;
   }
 
   // No format matched - parsing error
   return undefined;
+};
+
+export const formatLocaleDate = (date, locale = 'fr-FR') => {
+  if (!(date instanceof Date) || isNaN(date)) return undefined;
+
+  return new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(date);
 };
 
 /**

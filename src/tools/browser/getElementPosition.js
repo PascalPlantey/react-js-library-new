@@ -1,4 +1,4 @@
-import getHTMLElement from "./getHTMLElement";
+import getDocumentElement from "./getDocumentElement";
 
 /**
  * Retrieve the position and size of a DOM element
@@ -6,7 +6,7 @@ import getHTMLElement from "./getHTMLElement";
  * @returns {object} { top, left, bottom, right, height, width } Properties are undefined if el is not set
  */
 const getElementPosition = el => {
-  let elt = getHTMLElement(el);
+  let elt = getDocumentElement(el);
   if (!elt) return { top: undefined, left: undefined, bottom: undefined, right: undefined, height: undefined, width: undefined };
 
   let left, top,

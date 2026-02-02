@@ -1,3 +1,4 @@
+import getDocumentElement from "./getDocumentElement";
 
 /**
  * Returns all focusable elements within a given container.
@@ -38,7 +39,7 @@ export const focusFirstElement = container => {
   const focusableEls = getFocusableElements(container);
 
   if (focusableEls.length > 0) {
-    focusableEls[0].focus();
+    setFocus(focusableEls[0]);
     return true;
   }
 
@@ -55,7 +56,7 @@ export const focusLastElement = container => {
   const focusableEls = getFocusableElements(container);
 
   if (focusableEls.length > 0) {
-    focusableEls[focusableEls.length - 1].focus();
+    setFocus(focusableEls[focusableEls.length - 1]);
     return true;
   }
 
@@ -74,7 +75,7 @@ export const focusNextElement = (currentElement, container) => {
   const currentIndex = focusableEls.indexOf(currentElement);
 
   if (currentIndex !== -1 && currentIndex < focusableEls.length - 1) {
-    focusableEls[currentIndex + 1].focus();
+    setFocus(focusableEls[currentIndex + 1]);
     return true;
   }
 
@@ -93,7 +94,7 @@ export const focusPreviousElement = (currentElement, container) => {
   const currentIndex = focusableEls.indexOf(currentElement);
 
   if (currentIndex > 0) {
-    focusableEls[currentIndex - 1].focus();
+    setFocus(focusableEls[currentIndex - 1]);
     return true;
   }
 
@@ -109,8 +110,15 @@ export const focusPreviousElement = (currentElement, container) => {
 export const isElementFocusable = element => {
   if (!element) return false;
 
-  const focusableEls = getFocusableElements(element.parentElement);
-
-  return focusableEls.includes(element);
+  return getFocusableElements(element.parentElement).includes(element);
 };
 
+// Returns true if the specified element currently has focus
+export const hasFocus = element => document.activeElement === getDocumentElement(element);
+
+// Sets focus to the specified element
+export const setFocus = element => {
+  const realElement = getDocumentElement(element);
+  if (realElement && document.activeElement !== realElement)
+    realElement.focus();
+};

@@ -1,4 +1,4 @@
-import getHTMLElement from "./getHTMLElement";
+import getDocumentElement from "./getDocumentElement";
 import isEventTarget from './isEventTarget'
 
 /**
@@ -14,7 +14,7 @@ import isEventTarget from './isEventTarget'
  * + 11/01/2024: parameter defaults to document  
  */
 const getEventTarget = (elt = document) => {
-  const targetElt = getHTMLElement(elt) || elt;
+  const targetElt = getDocumentElement(elt) || elt;
   return isEventTarget(targetElt) ? targetElt : undefined;
 };
 

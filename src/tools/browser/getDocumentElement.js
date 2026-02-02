@@ -12,7 +12,7 @@ import isRef from "../is/isReactRef";
  * @returns {Element|undefined} A document element, `undefined` if not found
  * @memberof JS_BrowserHelpers#
  */
-const getHTMLElement = elt => {
+const getDocumentElement = elt => {
   let foundElt = elt;
 
   if      (isString(elt))
@@ -23,4 +23,4 @@ const getHTMLElement = elt => {
   return foundElt instanceof Element ? foundElt : undefined;
 };
 
-export default getHTMLElement;
+export default getDocumentElement;
