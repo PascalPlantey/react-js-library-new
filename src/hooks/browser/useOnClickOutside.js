@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 
 import useEventListener from "./useEventListener";
 
@@ -25,7 +25,7 @@ const useOnClickOutside = (ref, handler) => {
   };
 
   const mouseDown = useEventListener("mousedown", listener, document);
-  const touchDown = useEventListener("touchdown", listener, document);
+  const touchDown = useEventListener("touchstart", listener, document);
   const working = mouseDown.working && touchDown.working;
 
   const toggle = useCallback(() => {
@@ -36,7 +36,7 @@ const useOnClickOutside = (ref, handler) => {
       mouseDown.stopListener();
       touchDown.stopListener();
     }
-  }, [working, mouseDown.startListener, mouseDown.stopListener, touchDown.startListener, touchDown.stopListener]);
+  }, [working, mouseDown, touchDown]);
 
   return { working, toggle };
 };
