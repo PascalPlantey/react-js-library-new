@@ -588,7 +588,7 @@ export class BTree {
       }
     }
 
-    check = check.bind(this);
+    check.bind(this);
     check(this.root, 0);
 
     return balanced;

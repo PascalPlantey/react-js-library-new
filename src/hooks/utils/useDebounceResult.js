@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import useDebounce from "./useDebounce";
 
 import resolve from "../../tools/misc/resolve";
+import { frozenArray } from "../../tools/misc/emptyObject.js";
 
 /**
  * Executes a function after a debounced timeout and returns the result.
@@ -33,7 +34,7 @@ import resolve from "../../tools/misc/resolve";
  *   [inputValue]
  * );
  */
-const useDebounceResult = (func, dflt, timeout = 500, deps = []) => {
+const useDebounceResult = (func, dflt, timeout = 500, deps = frozenArray) => {
   const [result, setResult] = useState(() => resolve(dflt));
   const [isCalculating, setIsCalculating] = useState(false);
   

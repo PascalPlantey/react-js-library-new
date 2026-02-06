@@ -1,3 +1,5 @@
+import { frozenObject } from "../misc/emptyObject.js";
+
 /**
  * Creates a debounced fetch function that delays network requests for the same URL.
  * If multiple calls are made to the same URL within the specified delay, only the last one is executed.
@@ -13,7 +15,7 @@
 const debouncedFetch = (delay = 300) => {
   const fetchMap = new Map();
 
-  return (url, options = {}) => {
+  return (url, options = frozenObject) => {
     if (fetchMap.has(url)) {
       const { timeoutId, abortController } = fetchMap.get(url);
       clearTimeout(timeoutId);

@@ -10,7 +10,7 @@ import isFunction from "../is/isFunction";
  * @returns {any} The resolved value.
  */
 const resolve = (fnOrValue, fallback, ...args) => {
-  if (isFunction(fnOrValue))  return fnOrValue(fallback, ...args);
+  if (isFunction(fnOrValue))  return fnOrValue(...args);
   else                        return fnOrValue ?? fallback;
 };
 

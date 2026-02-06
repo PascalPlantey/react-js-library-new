@@ -4,6 +4,7 @@ import useLast from '../react/useLast';
 
 import isFunction from '../../tools/is/isFunction';
 import getEventTarget from '../../tools/browser/getEventTarget';
+import { frozenObject } from '../../tools/misc/emptyObject';
 
 /**
  * @description Fire a function when a document event happens
@@ -11,7 +12,7 @@ import getEventTarget from '../../tools/browser/getEventTarget';
  * @param {(event: Event) => any} fn
  * @param {Element|Window|Document|null} [elt=window]
  * @param {boolean} [immediately=true] Listen immediately or after toggle()
- * @param {object} [options={}] { capture, once, passive } [see Mozilla]{@link https://developer.mozilla.org/fr/docs/Web/API/EventTarget/addEventListener}
+ * @param {object} [options=frozenObject] { capture, once, passive } [see Mozilla]{@link https://developer.mozilla.org/fr/docs/Web/API/EventTarget/addEventListener}
  * @returns {object} { working: boolean, toggle: function() {} }
  * @example
  * const { working, toggle } = useEventListener('mousemove', console.log);
@@ -23,7 +24,7 @@ import getEventTarget from '../../tools/browser/getEventTarget';
  *  . 21/06/2025: added a fnRef to always the latest fn reference avoiding useEffect/useCallback dependencies issues
  *  . 30/12/2025: useLast for elt to avoid unnecessary restarts when elt is stable
  */
-const useEventListener = (name, fn, elt = window, immediately = true, options = {}) => {
+const useEventListener = (name, fn, elt = window, immediately = true, options = frozenObject) => {
   const [working, setWorking] = useState(!!immediately);
   const { capture, once, passive } = options;
   const refAbort = useRef(undefined);
@@ -62,7 +63,7 @@ const useEventListener = (name, fn, elt = window, immediately = true, options = 
       // console.log('starting event listener for', name);
       refElt.current?.addEventListener(name, listener, { capture, once, passive, signal: refAbort.current.signal });
     }
-  }, [capture, once, passive, name, stopListener]);
+  }, [refElt, fnRef, once, stopListener, name, capture, passive]);
 
   useEffect(() => {                                                 // (Re)Start listener when it changes
     if (working)

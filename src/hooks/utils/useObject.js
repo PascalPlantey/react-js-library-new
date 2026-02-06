@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 
 import toIterable from "../../tools/misc/toIterable";
+import { emptyObject } from "../../tools/misc/emptyObject";
 
 /**
  * Use an object as state with basic operations. Useful to avoid managing operations like setState(prev => ({ ...prev, other: 4 })
@@ -24,7 +25,7 @@ import toIterable from "../../tools/misc/toIterable";
  * set({ car: 'Honda' });         // object { car: 'Honda' }
  * clear();                       // object {}
  */
-const useObject = (initialState = {}) => {
+const useObject = (initialState = emptyObject) => {
   const [state, setState] = useState(initialState);
   const initialStateRef = useRef(initialState);           // Store initial state to restore later
 

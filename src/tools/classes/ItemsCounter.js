@@ -1,6 +1,7 @@
 import isArray from '../is/isArray';
 import isFunction from '../is/isFunction';
 import isString from '../is/isString';
+import { frozenArray } from '../misc';
 
 import toIterable from '../misc/toIterable';
 
@@ -15,10 +16,10 @@ const defaultRadical = 'Others: ';
 class ItemsCounter extends Map {
   /**
    * Builds an `ItemsCounter` in many different ways (see `ItemsCounter.AddCounts` examples)
-   * @param {Iterable|object} [itr=[]] Object or Collection of objects or undefined (defaults to [])
+   * @param {Iterable|object} [itr=frozenArray] Object or Collection of objects or undefined (defaults to [])
    * @param {function} [callback] Function returning key/value pairs to be added [[k, v], [k, v]]
    */
-  constructor(itr = [], callback) {
+  constructor(itr = frozenArray, callback) {
     super();
     this.addCounts(itr, callback);
   }
@@ -26,7 +27,7 @@ class ItemsCounter extends Map {
   /**
    * Add counts to an `ItemsCounter` in different ways. `itr` can be a Map with pairs of key/number,
    * thus can copy an `ItemsCounter`, allowing the constructor to copy/construct an `ItemsCounter`
-   * @param {Iterable} [itr=[]] Object or Collection of objects or undefined (defaults to [])
+   * @param {Iterable} [itr=frozenArray] Object or Collection of objects or undefined (defaults to [])
    * @param {function} [callback] Function returning key/count pairs to be added [[k, c], [k, c]] or [k1, k2, ...]
    * @returns {this}
    * @example
@@ -35,7 +36,7 @@ class ItemsCounter extends Map {
    * new ItemsCounter([['a', 2], ['a', 5], ['b', 3]])             // => Counts of 'a' and 'b'
    * new ItemsCounter([{ name: 'a', count: 5 }, { name: 'a', count: 2 }], ({ name, count }) => [[name, count]]) // => Occurences in objects
    */
-  addCounts(itr = [], callback) {
+  addCounts(itr = frozenArray, callback) {
     for(const item of toIterable(itr))
       if (isFunction(callback))                                             // Provided callback returning array [[key, value], ...]
         this.addCounts(callback(item));

@@ -1,4 +1,5 @@
 import { isDate } from "../is";
+import { frozenObject } from "./emptyObject";
 
 /**
  * Normalizes an object for SQL insertion/update by:
@@ -24,7 +25,7 @@ export const normalizeToSql = record =>
  * @param {Object} initialRecord - The initial record object.
  * @returns {Object} A new object ready for comparison.
  */
-export const normalizeForSqlComparison = (editRecord, initialRecord = {}) => {
+export const normalizeForSqlComparison = (editRecord, initialRecord = frozenObject) => {
   const result = {};
 
   for (const [key, value] of Object.entries(editRecord)) {

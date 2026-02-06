@@ -1,4 +1,5 @@
 import isIterable from '../is/isIterable';
+import { frozenArray } from '../misc';
 
 import ExtArray from './ExtArray';
 import ExtMath from './ExtMath';
@@ -38,10 +39,10 @@ class Stats {
   }
 
   /**
-   * @param {Iterable} [itr=Array] Iterable used to get values
+   * @param {Iterable} [itr=Array] Iterable used to get values from which the stats will be calculated
    * @param {function} [callBack] If provided, used to gather values from itr callBack: (item) => number
    */
-  constructor(itr = [], callBack) {
+  constructor(itr = frozenArray, callBack) {
     this.add(itr, callBack);
   }
 
@@ -70,7 +71,7 @@ class Stats {
    *   new Stats(vals)           // many values from an Iterable
    *   new Stats(5)              // single value
    */
-  add(itr = [], callback) {
+  add(itr = frozenArray, callback) {
     if (isIterable(itr)) {                                          // Adding a serie
       if (callback)                                                 // If a callback is provided,
         for(const item of itr)

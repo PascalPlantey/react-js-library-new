@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { normalizeForSqlComparison } from "./../../tools/misc/normalizeSql.js";
+import { frozenObject } from "../../tools/misc/emptyObject.js";
 
 /**
  * Custom React hook for managing the editing state of a record.
@@ -23,7 +24,7 @@ import { normalizeForSqlComparison } from "./../../tools/misc/normalizeSql.js";
  * handle field updates, and determine if the record has unsaved changes compared to the initial state.
  * Warning: after saving, the hasChanged flag will remain false until the initialRecord prop changes.
  */
-const useRecordEdit = (initialRecord = {}) => {
+const useRecordEdit = (initialRecord = frozenObject) => {
   const [editRecord, setEditRecord] = useState(() => structuredClone(initialRecord));
   const [hasBeenSaved, setHasBeenSaved] = useState(false);
 

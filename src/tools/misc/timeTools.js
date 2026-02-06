@@ -191,9 +191,9 @@ export const calculateDuration = (startDate, endDate) => {
   const { years, months, days } = timeDifference(startDate, endDate, true);
   const parts = [];
 
-  if (years > 0) parts.push(`${years} an${years > 1 ? 's' : ''}`);
+  if (years > 0)  parts.push(`${years} an${years > 1 ? 's' : ''}`);
   if (months > 0) parts.push(`${months} mois`);
-  if (days > 0) parts.push(`${days} jour${days > 1 ? 's' : ''}`);
+  if (days > 0)   parts.push(`${days} jour${days > 1 ? 's' : ''}`);
 
   if (parts.length === 0) return "aujourd'hui";
   if (parts.length === 1) return parts[0];
