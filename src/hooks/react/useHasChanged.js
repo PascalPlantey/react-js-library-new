@@ -8,8 +8,8 @@ import usePrev from "./usePrev";
  * @returns {boolean} - Returns true if the value has changed since the previous render, otherwise false.
  */
 const useHasChanged = value => {
-  const prevValue = usePrev(value);
-  return prevValue !== value;
+  const [prevValue, isFirstRender] = usePrev(value);
+  return !isFirstRender && prevValue !== value;
 };
 
 export default useHasChanged;

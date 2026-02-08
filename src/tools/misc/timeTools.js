@@ -10,12 +10,6 @@ export const toDate = time => {
     throw new Error('Invalid date format');
   return date;
 };
-/**
- * Validates that a Date object matches the expected year, month, and day values.
- * Rejects dates corrected by JavaScript (e.g., 31/11 becomes 1/12).
- * 
- * @private
- */
 
 /**
  * Parses a locale date string (e.g., '31/10/2026' for fr-FR) into a Date object.
@@ -79,6 +73,23 @@ export const formatLocaleDate = (date, locale = 'fr-FR') => {
     month: '2-digit',
     year: 'numeric'
   }).format(date);
+};
+
+/**
+ * Calculates the midnight boundaries of a given day.
+ * @param {Date} [today=new Date()] - The date to get boundaries for. Defaults to the current date.
+ * @returns {Object} An object containing the day boundaries.
+ * @returns {Date} returns.todayMidnight - The start of the day (00:00:00).
+ * @returns {Date} returns.nextDayMidnight - The start of the next day (00:00:00).
+ */
+export const getDayBoundaries = (today = new Date()) => {
+  const todayMidnight = new Date(today);
+  todayMidnight.setHours(0, 0, 0, 0);
+
+  const nextDayMidnight = new Date(todayMidnight);
+  nextDayMidnight.setDate(nextDayMidnight.getDate() + 1);
+
+  return { todayMidnight, nextDayMidnight };
 };
 
 /**
