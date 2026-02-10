@@ -31,17 +31,18 @@ const useRecordEdit = (initialRecord = frozenObject) => {
   useEffect(() => {
     setEditRecord(structuredClone(initialRecord));
     setHasBeenSaved(false);
-  }, [initialRecord]);
+  }, [initialRecord, setEditRecord, setHasBeenSaved]);
 
-  const handleChange = useCallback((name, value) => 
+  const handleChange = useCallback((name, value) => {
+    setHasBeenSaved(false);
     setEditRecord(prev => (
       prev[name] === value
         ? prev
         : { ...prev, [name]: value }
     ))
-  , []);
+  }, [setEditRecord, setHasBeenSaved]);
 
-  const onHasBeenSaved = useCallback(() =>setHasBeenSaved(true), []);
+  const onHasBeenSaved = useCallback(() => setHasBeenSaved(true), [setHasBeenSaved]);
 
   // SQL normalization: convert empty strings to null for comparison: empty object if no record
   const normalizedRecord = normalizeForSqlComparison(editRecord || {}, initialRecord || {});
@@ -54,9 +55,11 @@ const useRecordEdit = (initialRecord = frozenObject) => {
     initialRecord,
     editRecord,
     handleChange,
+    onChange: handleChange,
     setEditRecord,
     hasChanged,
     hasBeenSaved,
+    onHasBeenSaved,
     setHasBeenSaved: onHasBeenSaved,
   });
 };
