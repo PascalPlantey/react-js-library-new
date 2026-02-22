@@ -13,7 +13,14 @@ import useEventListener from "./useEventListener";
  * useOnKeyboard('Escape', isModalOpen, handleClose);
  */
 const useOnKeyboard = (key, enable, callback) => {
-  const { startListener, stopListener } = useEventListener('keydown', e => e.key === key && callback(), window, enable);
+  const { startListener, stopListener } =
+    useEventListener('keydown', e => {
+      if (e.key === key) {
+        e.preventDefault();   // Prevent default action for the key press (e.g., form submission on Enter)
+        e.stopPropagation();  // Stop the event from propagating further (e.g., to avoid triggering other handlers)
+        callback(e);
+      }
+    }, window, enable);
 
   useEffect(() => {
     enable ? startListener() : stopListener();

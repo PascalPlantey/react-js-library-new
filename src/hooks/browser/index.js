@@ -14,6 +14,7 @@ export { default as useKeepAwake } from './useKeepAwake.js';
 export { default as useNavigationBlocker } from './useNavigationBlocker.js';
 export { default as useOnClickOutside } from './useOnClickOutside.js';
 export { default as useOnKeyboard } from './useOnKeyboard.js';
+export { default as useOnKeyboards } from './useOnKeyboards.js';
 export { default as useResizeObserver } from './useResizeObserver.js';
 export { default as useSharedStorage } from './useSharedStorage.js';
 export { default as useStorageItem } from './useStorageItem.js';
