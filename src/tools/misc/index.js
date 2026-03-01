@@ -1,5 +1,6 @@
 export { default as debounceImmediate } from './debounceImmediate.js';
 export { default as getJSClassname } from './getJSClassName.js';
+export { default as getObjectPropertyByPath } from './getObjectPropertyByPath.js';
 export { default as googleMapsLink } from './googleMapsLink.js';
 export { default as initials } from './initials.js';
 export { default as noop } from './noop.js';
