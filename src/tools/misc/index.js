@@ -4,6 +4,7 @@ export { default as getObjectPropertyByPath } from './getObjectPropertyByPath.js
 export { default as googleMapsLink } from './googleMapsLink.js';
 export { default as initials } from './initials.js';
 export { default as noop } from './noop.js';
+export { default as noopPromise } from './noopPromise.js';
 export { default as resolve } from './resolve.js';
 export { default as toArray } from './toArray.js';
 export { default as toIterable } from './toIterable.js';

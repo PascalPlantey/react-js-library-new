@@ -5,7 +5,7 @@ export default useEventListener;
  * @param {(event: Event) => any} fn
  * @param {Element|Window|Document|null} [elt=window]
  * @param {boolean} [immediately=true] Listen immediately or after toggle()
- * @param {object} [options={}] { capture, once, passive } [see Mozilla]{@link https://developer.mozilla.org/fr/docs/Web/API/EventTarget/addEventListener}
+ * @param {object} [options=frozenObject] { capture, once, passive } [see Mozilla]{@link https://developer.mozilla.org/fr/docs/Web/API/EventTarget/addEventListener}
  * @returns {object} { working: boolean, toggle: function() {} }
  * @example
  * const { working, toggle } = useEventListener('mousemove', console.log);

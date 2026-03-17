@@ -6,14 +6,14 @@ export default ItemsCounter;
 declare class ItemsCounter extends Map<any, any> {
     /**
      * Builds an `ItemsCounter` in many different ways (see `ItemsCounter.AddCounts` examples)
-     * @param {Iterable|object} [itr=[]] Object or Collection of objects or undefined (defaults to [])
+     * @param {Iterable|object} [itr=frozenArray] Object or Collection of objects or undefined (defaults to [])
      * @param {function} [callback] Function returning key/value pairs to be added [[k, v], [k, v]]
      */
     constructor(itr?: Iterable<any> | object, callback?: Function);
     /**
      * Add counts to an `ItemsCounter` in different ways. `itr` can be a Map with pairs of key/number,
      * thus can copy an `ItemsCounter`, allowing the constructor to copy/construct an `ItemsCounter`
-     * @param {Iterable} [itr=[]] Object or Collection of objects or undefined (defaults to [])
+     * @param {Iterable} [itr=frozenArray] Object or Collection of objects or undefined (defaults to [])
      * @param {function} [callback] Function returning key/count pairs to be added [[k, c], [k, c]] or [k1, k2, ...]
      * @returns {this}
      * @example

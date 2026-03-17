@@ -73,6 +73,11 @@ declare class ExtMap extends Map<any, any> {
      */
     sortedArray(sortFn?: Function): any[][];
     /**
+     * Returns the map values as a sorted array [v, v, v, ...]
+     * @param {function} [sortFn=(a, b) => a.localeCompare(b)] Sort function, sorting by value by default
+     */
+    sortedValuesArray(sortFn?: Function): any[];
+    /**
      * Return a new ExtMap sorted
      * @param {function} [sortFn=([a], [b]) => a.localeCompare(b)] Sort function, sorting by key by default
      */

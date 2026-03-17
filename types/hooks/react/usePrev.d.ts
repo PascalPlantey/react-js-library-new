@@ -3,6 +3,6 @@ export default usePrev;
  * Custom React hook that returns the previous value of a given variable.
  *
  * @param {*} value - The current value to track.
- * @returns {*} The previous value before the current render, or undefined on the first render.
+ * @returns {[any, boolean]} A tuple of [previousValue, isFirstRender].
  */
-declare function usePrev(value: any): any;
+declare function usePrev(value: any): [any, boolean];

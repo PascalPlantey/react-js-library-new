@@ -54,7 +54,6 @@ const useRecordEdit = (initialRecord = frozenObject) => {
   return ({
     initialRecord,
     editRecord,
-    handleChange,
     onChange: handleChange,
     setEditRecord,
     hasChanged,

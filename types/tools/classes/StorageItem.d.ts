@@ -6,7 +6,7 @@ export default StorageItem;
 declare class StorageItem {
     /**
       * @param {string} [key] Storage key
-      * @param {Array<any>} [dflt=[]] Default value if key does not exist in the storage ([] if not provided)
+      * @param {Array<any>} [dflt=frozenArray] Default value if key does not exist in the storage ([] if not provided)
       * @param {boolean} [local=true] Local storage if true, session storage otherwise
       */
     constructor(key?: string, dflt?: Array<any>, local?: boolean);

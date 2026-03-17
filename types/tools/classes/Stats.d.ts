@@ -15,7 +15,7 @@ declare class Stats {
      */
     static rankBy(data: Array<any>, fieldName: string, rankFieldName?: string): Array<any>;
     /**
-     * @param {Iterable} [itr=Array] Iterable used to get values
+     * @param {Iterable} [itr=Array] Iterable used to get values from which the stats will be calculated
      * @param {function} [callBack] If provided, used to gather values from itr callBack: (item) => number
      */
     constructor(itr?: Iterable<any>, callBack?: Function);
