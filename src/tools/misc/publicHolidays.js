@@ -1,4 +1,6 @@
 import axios from "axios";
+import { ExtMap } from "../classes";
+import { toDateKey } from "./timeTools";
 
 /**
  * Retrieves public holidays for a given year and country code.
@@ -26,12 +28,21 @@ import axios from "axios";
 export const getPublicHolidays = async (year, countryCode = "FR") =>
   axios.get(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
        .then(({ data }) => {
-        data?.forEach(element => element.jsDate = new Date(element.date));
-        return data;
+          data?.forEach(element => element.jsDate = new Date(element.date));
+          return data;
        })
        .catch(error => {
-         console.error('Erreur lors de la récupération des jours fériés :', error);
+          console.error('Erreur lors de la récupération des jours fériés :', error);
        });
+
+/**
+ * Build a map of holiday dates for quick lookup, using the date as the key and the holiday object as the value.
+ *
+ * @param {Array<Object>} holidays - An array of holiday objects, each containing a `jsDate` property (Date instance).
+ * @returns {ExtMap} An ExtMap where the keys are date strings in 'YYYY-MM-DD' format and the values are the corresponding
+ * holiday objects.
+ */
+export const holidayDatesMap = (holidays) => new ExtMap(holidays, holiday => [toDateKey(holiday.jsDate), holiday]);
 
 /**
  * Filters a list of holiday objects to return only those that occur in the specified month.

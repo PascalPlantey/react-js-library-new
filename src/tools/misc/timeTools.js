@@ -223,3 +223,50 @@ export const calculateDuration = (startDate, endDate) => {
 export const daysInMonth = (year, month) => {
   return new Date(year, month + 1, 0).getDate();
 };
+
+/**
+ * Builds a key out of a date in the format "YYYY-MM-DD"
+ * 
+ * @param {Date} date 
+ * @returns {string} A string in the format "YYYY-MM-DD" representing the given date, which can be used as a key for maps or objects
+ * where dates need to be compared or accessed by date. The format is consistent and sortable, making it ideal for such use cases.
+ * 
+ * @example
+ * const date = new Date('2024-10-31');
+ * toDateKey(date); // "2024-10-31" 
+ */
+export const toDateKey = date => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+/**
+ * Checks if two dates fall on the same calendar day.
+ * 
+ * @param {Date} start - The first date to compare.
+ * @param {Date} end - The second date to compare.
+ * @returns {boolean} True if the dates are on the same calendar day, false otherwise.
+ */
+export const isSameCalendarDay = (start, end) => toDateKey(start) === toDateKey(end);
+
+/**
+ * Checks if a given date is today.
+ * 
+ * @param {Date} date - The date to check.
+ * @returns {boolean} True if the given date is today, false otherwise.
+ */
+export const isToday = date => isSameCalendarDay(date, new Date());
+
+/**
+ * Checks if a given date falls on a weekend (Saturday or Sunday).
+ * 
+ * @param {Date} date - The date to check.
+ * @returns {boolean} True if the given date falls on a weekend (Saturday or Sunday), false otherwise.
+ */
+export const isWeekend = (date) => {
+  const day = date.getDay();
+  return day === 0 || day === 6;
+};
+
