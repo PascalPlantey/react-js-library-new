@@ -187,6 +187,45 @@ export const timeDifference = (time1, time2, full = false) => {
 };
 
 /**
+ * Calculates the number of days between two dates, excluding the end date.
+ * 
+ * @param {Date} start - The start date
+ * @param {Date} end - The end date
+ * @returns {number} The number of days between the two dates, excluding the end date
+ * @example
+ * const start = new Date('2024-01-01');
+ * const end = new Date('2024-01-10');
+ * daysBetweenExclusiveEnd(start, end); // 9
+ */
+export const daysBetweenExclusiveEnd = (start, end) => {
+  const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
+  const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+  return (utcEnd - utcStart) / (1000 * 60 * 60 * 24);
+};
+
+/**
+ * Generates a range of dates between two given dates, inclusive.
+ * 
+ * @param {Date} a - The start date
+ * @param {Date} b - The end date
+ * @returns {Generator<Date>} A generator yielding each date in the range from a to b, inclusive. The dates are returned in chronological order
+ * regardless of the order of a and b.
+ * @example
+ * const start = new Date('2024-01-01');
+ * const end = new Date('2024-01-05');
+ * [...buildDayRange(start, end)]; // [2024-01-01, 2024-01-02, 2024-01-03, 2024-01-04, 2024-01-05]
+ * [...buildDayRange(end, start)]; // [2024-01-01, 2024-01-02, 2024-01-03, 2024-01-04, 2024-01-05]
+ */
+export function* buildDayRange(a, b) {
+  const [start, end] = a < b ? [a, b] : [b, a];
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    yield new Date(cursor);
+    cursor.setDate(cursor.getDate() + 1);
+  }
+};
+
+/**
  * Calculates the duration between two dates and returns a human-readable string.
  * 
  * @param {Date} startDate - The start date
@@ -223,6 +262,19 @@ export const calculateDuration = (startDate, endDate) => {
 export const daysInMonth = (year, month) => {
   return new Date(year, month + 1, 0).getDate();
 };
+
+/**
+ * Converts a date to a the same date at midnight (00:00:00) to standardize date comparisons and operations that should ignore time components.
+ * 
+ * @param {Date} date 
+ * @returns {Date} A new Date object representing the start of the day (midnight) for the given date. The time components
+ * (hours, minutes, seconds, milliseconds) are set to zero.
+ * 
+ * @example
+ * const date = new Date('2024-10-31T15:45:30');
+ * toStartOfDay(date); // 2024-10-31T00:00:00
+ */
+export const toStartOfDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
 /**
  * Builds a key out of a date in the format "YYYY-MM-DD"
@@ -269,4 +321,3 @@ export const isWeekend = (date) => {
   const day = date.getDay();
   return day === 0 || day === 6;
 };
-

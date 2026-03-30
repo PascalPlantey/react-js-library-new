@@ -1,6 +1,8 @@
 import axios from "axios";
+
 import { ExtMap } from "../classes";
 import { toDateKey } from "./timeTools";
+import { parseSqlDateAsLocalDate } from "./normalizeSql";
 
 /**
  * Retrieves public holidays for a given year and country code.
@@ -20,7 +22,7 @@ import { toDateKey } from "./timeTools";
  * // [
  * //   {
  * //     date: '2026-04-06', localName: 'Lundi de Pâques', name: 'Easter Monday', countryCode: 'FR', fixed: false,
- * //     global: true, jsDate: new Date('2026-04-06'), counties: null, launchYear: null, types: ['Public']
+ * //     global: true, jsDate: parseSqlDateAsLocalDate('2026-04-06'), counties: null, launchYear: null, types: ['Public']
  * //   },
  * //   ...
  * // ]
@@ -28,7 +30,7 @@ import { toDateKey } from "./timeTools";
 export const getPublicHolidays = async (year, countryCode = "FR") =>
   axios.get(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
        .then(({ data }) => {
-          data?.forEach(element => element.jsDate = new Date(element.date));
+          data?.forEach(element => element.jsDate = parseSqlDateAsLocalDate(element.date));
           return data;
        })
        .catch(error => {
@@ -60,10 +62,8 @@ export const publicHolidaysForMonth = (holidays, month = new Date().getMonth()) 
  *
  * @param {Array<Object>} holidays - Array of holiday objects, each containing a `jsDate` property (Date instance).
  * @param {number} [month=new Date().getMonth()] - The month for which to calculate assignable days (0-indexed, 0 = January).
- * @returns {{ days: number[], month: number, year: number }} An object with:
- *   - days: Array of day numbers (1-indexed) that are assignable (not weekend or holiday).
- *   - month: The month number used (0-indexed).
- *   - year: The year used.
+ * @param {number} [year=new Date().getFullYear()] - The year for which to calculate assignable days.
+ * @returns {Array<Date>} An array of Date objects representing the assignable days (not weekend or holiday).
  */
 export const workingDaysForMonth = (holidays, month = new Date().getMonth(), year = new Date().getFullYear()) => {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -80,8 +80,8 @@ export const workingDaysForMonth = (holidays, month = new Date().getMonth(), yea
     );
 
     if (!isWeekend && !isHoliday)
-      days.push(day);
+      days.push(currentDate); // Only add the day number if it's not a weekend or a holiday
   }
 
-  return { days, month, year };
+  return days;
 };

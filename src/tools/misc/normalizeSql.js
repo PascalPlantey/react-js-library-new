@@ -37,11 +37,28 @@ export const normalizeForSqlComparison = (editRecord, initialRecord = frozenObje
 };
 
 /**
- * Converts a SQL date string to a JavaScript Date object.
- * @param {string} dateStr - A SQL date string (e.g., "2023-12-25" or "2023-12-25T10:30:00Z")
- * @returns {Date|null} A Date object if dateStr is provided, otherwise null
+ * Parse a SQL date string as a local calendar date (not UTC). If the input is already a Date object
+ * 
+ * @param {string} date 
+ * @returns {Date} A JavaScript Date object representing the given SQL date string, parsed as a local calendar date (not UTC).
+ * If the input is already a Date object, it returns a new Date with the same year, month, and day (time set to 00:00:00).
+ * If the input is a string in the format 'YYYY-MM-DD', it parses it as a local date.
+ * For any other input, it attempts to create a Date object directly from it.
+ * This function is useful for normalizing date inputs that may come from SQL or other sources, ensuring that they are treated as local calendar dates.
+ * Note: The time component of the returned Date object is set to 00:00:00 local time.
  */
-export const dateFromSql = dateStr => dateStr ? new Date(dateStr) : null;
+export const parseSqlDateAsLocalDate = date => {
+  if (date instanceof Date)
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  // SQL DATE is provided as YYYY-MM-DD; parse as local calendar date (not UTC)
+  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const [year, month, day] = date.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  return new Date(date);
+};
 
 /**
  * Converts a JavaScript Date object to a SQL date string in the format 'YYYY-MM-DD'.

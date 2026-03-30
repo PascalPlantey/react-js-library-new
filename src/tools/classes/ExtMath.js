@@ -98,6 +98,10 @@ class ExtMath {
     return interval.sort((a, b) => a - b);
   }
 
+  static percentageOfTotal(part, total, round = 2) {
+    return total === 0 ? 0 : parseFloat(((part / total) * 100).toFixed(round));
+  }
+
   /**
    * Change the default object type name visible through Object.prototype.toString.call
    * @returns {string}
