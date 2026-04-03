@@ -213,16 +213,31 @@ export const daysBetweenExclusiveEnd = (start, end) => {
  * @example
  * const start = new Date('2024-01-01');
  * const end = new Date('2024-01-05');
- * [...buildDayRange(start, end)]; // [2024-01-01, 2024-01-02, 2024-01-03, 2024-01-04, 2024-01-05]
- * [...buildDayRange(end, start)]; // [2024-01-01, 2024-01-02, 2024-01-03, 2024-01-04, 2024-01-05]
+ * [...buildDaysRange(start, end)]; // [2024-01-01, 2024-01-02, 2024-01-03, 2024-01-04, 2024-01-05]
+ * [...buildDaysRange(end, start)]; // [2024-01-01, 2024-01-02, 2024-01-03, 2024-01-04, 2024-01-05]
  */
-export function* buildDayRange(a, b) {
+export function* buildDaysRange(a, b) {
   const [start, end] = a < b ? [a, b] : [b, a];
   const cursor = new Date(start);
   while (cursor <= end) {
     yield new Date(cursor);
     cursor.setDate(cursor.getDate() + 1);
   }
+};
+
+/**
+ * Generates a range of dates for a given month and year, inclusive.
+ * 
+ * @param {Number} month - The month (0-based, where 0 = January, 11 = December)
+ * @param {Number} year - The year (e.g., 2024)
+ * @returns {Generator<Date>} A generator yielding each date in the specified month and year
+ * @example
+ * [...buildMonthDaysRange(0, 2024)]; // [2024-01-01, 2024-01-02, ..., 2024-01-31]
+ */
+export function* buildMonthDaysRange(month, year) {
+  const start = new Date(year, month, 1);
+  const end = new Date(year, month + 1, 0);
+  yield* buildDaysRange(start, end);
 };
 
 /**

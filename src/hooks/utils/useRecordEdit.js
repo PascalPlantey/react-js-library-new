@@ -51,6 +51,7 @@ const useRecordEdit = (initialRecord = frozenObject) => {
     ? false
     : JSON.stringify(initialRecord) !== JSON.stringify(normalizedRecord);
 
+  // console.log("useRecordEdit: hasChanged =", { hasChanged, initialRecord, editRecord, normalizedRecord });
   return ({
     initialRecord,
     editRecord,
