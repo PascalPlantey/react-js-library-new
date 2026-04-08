@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": /*"node",*/ "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
@@ -18,7 +18,7 @@
     "emitDeclarationOnly": true,
     "rootDir": "./src",
     "outDir": "types",
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
       "react-js-library": ["./src/index.js"],
       "react-js-library-new/*": ["./src/*"]

@@ -3,6 +3,7 @@ export { default as useCounter } from "./useCounter.js";
 export { default as useDebounce } from "./useDebounce.js";
 export { default as useDebounceResult } from "./useDebounceResult.js";
 export { default as useDebounceValue } from "./useDebounceValue.js";
+export { default as useEditableState } from "./useEditableState.js";
 export { default as useNetworkStatus } from "./useNetworkStatus.js";
 export { default as useNewClassRef } from "./useNewClassRef.js";
 export { default as useObject } from "./useObject.js";

@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 import { normalizeForSqlComparison } from "./../../tools/misc/normalizeSql.js";
 import { frozenObject } from "../../tools/misc/emptyObject.js";
+import useEditableState from "./useEditableState.js";
 
 /**
  * Custom React hook for managing the editing state of a record.
@@ -25,13 +26,18 @@ import { frozenObject } from "../../tools/misc/emptyObject.js";
  * Warning: after saving, the hasChanged flag will remain false until the initialRecord prop changes.
  */
 const useRecordEdit = (initialRecord = frozenObject) => {
-  const [editRecord, setEditRecord] = useState(() => structuredClone(initialRecord));
-  const [hasBeenSaved, setHasBeenSaved] = useState(false);
-
-  useEffect(() => {
-    setEditRecord(structuredClone(initialRecord));
-    setHasBeenSaved(false);
-  }, [initialRecord, setEditRecord, setHasBeenSaved]);
+  const {
+    initialValue,
+    value: editRecord,
+    setValue: setEditRecord,
+    hasChanged,
+    setHasBeenSaved,
+  } = useEditableState(initialRecord, {
+    isEqual: (baseRecord, currentRecord) => {
+      const normalizedRecord = normalizeForSqlComparison(currentRecord || {}, baseRecord || {});
+      return JSON.stringify(baseRecord) === JSON.stringify(normalizedRecord);
+    },
+  });
 
   const handleChange = useCallback((name, value) => {
     setHasBeenSaved(false);
@@ -42,25 +48,14 @@ const useRecordEdit = (initialRecord = frozenObject) => {
     ))
   }, [setEditRecord, setHasBeenSaved]);
 
-  const onHasBeenSaved = useCallback(() => setHasBeenSaved(true), [setHasBeenSaved]);
-
-  // SQL normalization: convert empty strings to null for comparison: empty object if no record
-  const normalizedRecord = normalizeForSqlComparison(editRecord || {}, initialRecord || {});
-
-  const hasChanged = hasBeenSaved
-    ? false
-    : JSON.stringify(initialRecord) !== JSON.stringify(normalizedRecord);
-
   // console.log("useRecordEdit: hasChanged =", { hasChanged, initialRecord, editRecord, normalizedRecord });
   return ({
-    initialRecord,
+    initialRecord: initialValue,
     editRecord,
     onChange: handleChange,
     setEditRecord,
     hasChanged,
-    hasBeenSaved,
-    onHasBeenSaved,
-    setHasBeenSaved: onHasBeenSaved,
+    setHasBeenSaved,
   });
 };
 

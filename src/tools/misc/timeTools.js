@@ -75,19 +75,23 @@ export const formatLocaleDate = (date, locale = 'fr-FR') => {
   }).format(date);
 };
 
+export const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+
+export const toStartOfDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+export const toEndOfDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+export const toNextDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+export const toPreviousDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+
 /**
  * Calculates the midnight boundaries of a given day.
- * @param {Date} [today=new Date()] - The date to get boundaries for. Defaults to the current date.
+ * @param {Date} [date=new Date()] - The date to get boundaries for. Defaults to the current date.
  * @returns {Object} An object containing the day boundaries.
  * @returns {Date} returns.todayMidnight - The start of the day (00:00:00).
  * @returns {Date} returns.nextDayMidnight - The start of the next day (00:00:00).
  */
-export const getDayBoundaries = (today = new Date()) => {
-  const todayMidnight = new Date(today);
-  todayMidnight.setHours(0, 0, 0, 0);
-
-  const nextDayMidnight = new Date(todayMidnight);
-  nextDayMidnight.setDate(nextDayMidnight.getDate() + 1);
+export const getDayBoundaries = (date = new Date()) => {
+  const todayMidnight = toStartOfDay(date);
+  const nextDayMidnight = toNextDay(todayMidnight);
 
   return { todayMidnight, nextDayMidnight };
 };
@@ -266,30 +270,6 @@ export const calculateDuration = (startDate, endDate) => {
 
   return parts.slice(0, -1).join(", ") + " et " + parts[parts.length - 1];
 };
-
-/**
- * Returns the number of days in a given month and year.
- *
- * @param {number} year - The year (e.g., 2024).
- * @param {number} month - The month (0-based, where 0 = January, 11 = December).
- * @returns {number} The number of days in the specified month.
- */
-export const daysInMonth = (year, month) => {
-  return new Date(year, month + 1, 0).getDate();
-};
-
-/**
- * Converts a date to a the same date at midnight (00:00:00) to standardize date comparisons and operations that should ignore time components.
- * 
- * @param {Date} date 
- * @returns {Date} A new Date object representing the start of the day (midnight) for the given date. The time components
- * (hours, minutes, seconds, milliseconds) are set to zero.
- * 
- * @example
- * const date = new Date('2024-10-31T15:45:30');
- * toStartOfDay(date); // 2024-10-31T00:00:00
- */
-export const toStartOfDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
 /**
  * Builds a key out of a date in the format "YYYY-MM-DD"
