@@ -25,7 +25,7 @@ const useNavigationBlocker = (shouldBlock, showConfirm) => {
 
   const confirmFnRef = useLast(showConfirm);
   const { state, proceed, reset } = useBlocker(({ currentLocation, nextLocation }) =>
-    shouldBlock && currentLocation.pathname !== nextLocation.pathname
+    shouldBlock && (currentLocation.pathname !== nextLocation.pathname || currentLocation.search !== nextLocation.search)
   );
 
   // Block hard navigation (browser close, refresh, etc.): standard message is shown by the browser

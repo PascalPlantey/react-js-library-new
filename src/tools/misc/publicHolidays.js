@@ -60,15 +60,14 @@ export const publicHolidaysForMonth = (holidays, month = new Date().getMonth()) 
  * Returns an object containing the working days for a given month and year,
  * excluding weekends (Saturdays and Sundays) and specified public holidays.
  *
+ * @param {number} year - The year for which to calculate assignable days.
+ * @param {number} month - The month for which to calculate assignable days (0-indexed, 0 = January).
  * @param {Array<Object>} holidays - Array of holiday objects, each containing a `jsDate` property (Date instance).
- * @param {number} [month=new Date().getMonth()] - The month for which to calculate assignable days (0-indexed, 0 = January).
- * @param {number} [year=new Date().getFullYear()] - The year for which to calculate assignable days.
  * @returns {Array<Date>} An array of Date objects representing the assignable days (not weekend or holiday).
  */
-export const workingDaysForMonth = (holidays, month = new Date().getMonth(), year = new Date().getFullYear()) => {
+export function* workingDaysForMonth(year, month, holidays) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const holidaysForMonth = publicHolidaysForMonth(holidays, month);
-  const days = [];
 
   for (let day = 1; day <= daysInMonth; day++) {
     const currentDate = new Date(year, month, day);
@@ -80,8 +79,6 @@ export const workingDaysForMonth = (holidays, month = new Date().getMonth(), yea
     );
 
     if (!isWeekend && !isHoliday)
-      days.push(currentDate); // Only add the day number if it's not a weekend or a holiday
+      yield currentDate; // Only add the day number if it's not a weekend or a holiday
   }
-
-  return days;
 };
