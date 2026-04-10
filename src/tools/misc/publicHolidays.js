@@ -44,7 +44,7 @@ export const getPublicHolidays = async (year, countryCode = "FR") =>
  * @returns {ExtMap} An ExtMap where the keys are date strings in 'YYYY-MM-DD' format and the values are the corresponding
  * holiday objects.
  */
-export const holidayDatesMap = (holidays) => new ExtMap(holidays, holiday => [toDateKey(holiday.jsDate), holiday]);
+export const holidayDatesMap = holidays => new ExtMap(holidays, holiday => [toDateKey(holiday.jsDate), holiday]);
 
 /**
  * Filters a list of holiday objects to return only those that occur in the specified month.

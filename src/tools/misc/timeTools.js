@@ -312,7 +312,7 @@ export const isToday = date => isSameCalendarDay(date, new Date());
  * @param {Date} date - The date to check.
  * @returns {boolean} True if the given date falls on a weekend (Saturday or Sunday), false otherwise.
  */
-export const isWeekend = (date) => {
+export const isWeekend = date => {
   const day = date.getDay();
   return day === 0 || day === 6;
 };
