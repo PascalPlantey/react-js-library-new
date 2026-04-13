@@ -60,6 +60,7 @@ declare class ExtMath {
      * @returns {[from: number, to: number]} [base - (base * increasePercentage%), base + (base * increasePercentage%)]
      */
     static intervalFromPercentageDelta(from: any, increasePercentage: number, floor?: boolean): [from: number, to: number];
+    static percentageOfTotal(part: any, total: any, round?: number): number;
     /**
      * Change the default object type name visible through Object.prototype.toString.call
      * @returns {string}

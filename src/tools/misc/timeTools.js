@@ -35,9 +35,8 @@ export const parseLocaleDate = (dateString, locale = 'fr-FR') => {
   // Non-string is an error
   if (typeof dateString !== 'string') return undefined;
   // Empty string means no date, return null
-  if (dateString.trim().length === 0) return null;
-
   const trimmed = dateString.trim();
+  if (trimmed.length === 0) return null;
 
   // Format: DD/MM/YYYY or MM/DD/YYYY
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(trimmed)) {

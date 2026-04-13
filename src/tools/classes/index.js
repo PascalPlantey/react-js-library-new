@@ -3,6 +3,7 @@ export { default as CSSVariable } from './CSSVariable.js';
 export { default as Enum } from "./Enum";
 export * from "./EventEmitter";
 export { default as ExtArray } from "./ExtArray";
+export * from "./ExtDate";
 export { default as ExtMap } from "./ExtMap";
 export { default as Compound } from './Compound.js';
 export { default as CompoundMap } from './CompoundMap.js';                // Must be imported after ExtMap

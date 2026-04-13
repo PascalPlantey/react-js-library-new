@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { frozenObject } from "../../tools/misc/emptyObject.js";
 
@@ -31,20 +31,29 @@ const normalizeOptions = optionsOrClone => {
 const useEditableState = (initialValue = frozenObject, optionsOrClone = defaultClone) => {
   const { clone = defaultClone, isEqual = defaultIsEqual } = normalizeOptions(optionsOrClone);
   const cloneRef = useLast(clone);
+  const previousInitialValueRef = useRef(initialValue);
 
   const cloneValue = useCallback(value => cloneRef.current(value), [cloneRef]);
   const [committedValue, setCommittedValue] = useState(() => cloneValue(initialValue));
   const [editableValue, setEditableValue] = useState(() => cloneValue(initialValue));
 
+  // Synchronize committed and editable values when initialValue changes, unless it's the same as before
   useEffect(() => {
-    setCommittedValue(cloneValue(initialValue));
-    setEditableValue(cloneValue(initialValue));
+    if (Object.is(previousInitialValueRef.current, initialValue))
+      return;
+
+    previousInitialValueRef.current = initialValue;
+    const nextCommittedValue = cloneValue(initialValue);
+    setCommittedValue(nextCommittedValue);
+    setEditableValue(cloneValue(nextCommittedValue));
   }, [initialValue, cloneValue]);
 
+  // Function to reset the committed value to the current editable value, typically after a save operation
   const resetAfterSave = useCallback(() => {
     setCommittedValue(cloneValue(editableValue));
   }, [cloneValue, editableValue]);
 
+  // Determine if the editable value has unsaved changes compared to the committed value
   const hasChanged = !isEqual(committedValue, editableValue);
 
   return {
