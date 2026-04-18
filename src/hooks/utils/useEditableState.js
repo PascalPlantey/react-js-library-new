@@ -49,9 +49,10 @@ const useEditableState = (initialValue = frozenObject, optionsOrClone = defaultC
   }, [initialValue, cloneValue]);
 
   // Function to reset the committed value to the current editable value, typically after a save operation
-  const resetAfterSave = useCallback(() => {
-    setCommittedValue(cloneValue(editableValue));
-  }, [cloneValue, editableValue]);
+  // If calling setEditableValue with a new value and resetAfterSave() immediately after, the committed value will be set
+  // to the old editable value, so we can also pass the new value to resetAfterSave to update the committed value accordingly
+  const resetAfterSave = useCallback((nextValue = editableValue) =>
+    setCommittedValue(cloneValue(nextValue)), [cloneValue, editableValue]);
 
   // Determine if the editable value has unsaved changes compared to the committed value
   const hasChanged = !isEqual(committedValue, editableValue);

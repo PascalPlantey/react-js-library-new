@@ -23,6 +23,7 @@ import isFunction from "../../tools/is/isFunction";
 const useNavigationBlocker = (shouldBlock, showConfirm) => {
   console.assert(isFunction(showConfirm), `useNavigationBlocker: showConfirm is not a function: ${showConfirm}`);
 
+  // console.log('useNavigationBlocker: shouldBlock is', shouldBlock);
   const confirmFnRef = useLast(showConfirm);
   const { state, proceed, reset } = useBlocker(({ currentLocation, nextLocation }) =>
     shouldBlock && (currentLocation.pathname !== nextLocation.pathname || currentLocation.search !== nextLocation.search)

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { upperFirst } from '../misc';
 
 /**------------------------------------------------------------------------------*
  * Consistency internal helpers
@@ -831,8 +832,9 @@ class Month extends DatesRange {
    * @param {string} [locale='fr-FR'] Locale code (default: 'fr-FR')
    * @returns {string} Name of the month in the specified locale
    */
-  getName(locale = 'fr-FR') {
-    return this.firstDay.toLocaleString(locale, { month: 'long' });
+  getName(locale = 'fr-FR', uppercaseFirst = false) {
+    const monthName = this.firstDay.toLocaleString(locale, { month: 'long' });
+    return uppercaseFirst ? upperFirst(monthName) : monthName;
   }
 
   toString(locale = 'fr-FR') {
@@ -886,6 +888,7 @@ class PublicHolidays {
 
     try {
       const { data } = await axios.get(`https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`);
+      // console.log(`Fetched ${data.length} public holidays for ${country} in ${year}`);
       return new PublicHolidays(year, data);
     } catch (error) {
       console.error('Error fetching public holidays:', error);
